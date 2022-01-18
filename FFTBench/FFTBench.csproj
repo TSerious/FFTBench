@@ -131,6 +131,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\FFTSSharp-05d356ee6a168d4d818b75d26975b7d025ecc754\FFTSSharp\FFTSSharp.csproj" />
     <ProjectReference Include="..\Exocortex.DSP\Exocortex.DSP.csproj" />
+    <ProjectReference Include="..\FFTSSharp\FFTSSharp.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\save.png" />
@@ -138,4 +139,7 @@
   <ItemGroup>
     <Compile Remove="Benchmark\TestFFTWReal32.cs" />
   </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="if not exist $(TargetDir)ffts-dlls mkdir $(TargetDir)ffts-dlls&#xD;&#xA;xcopy &quot;$(SolutionDir)FFTSSharp\ffts-dlls&quot; &quot;$(TargetDir)ffts-dlls&quot; /Y /I&#xD;&#xA;xcopy &quot;$(SolutionDir)fftw-3.3.5-dll64\libfftw3-3.dll&quot; &quot;$(TargetDir)&quot; /Y&#xD;&#xA;xcopy &quot;$(SolutionDir)fftw-3.3.5-dll64\libfftw3f-3.dll&quot; &quot;$(TargetDir)&quot; /Y&#xD;&#xA;xcopy &quot;$(SolutionDir)fftw-3.3.5-dll64\libfftw3l-3.dll&quot; &quot;$(TargetDir)&quot; /Y" />
+  </Target>
 </Project>
