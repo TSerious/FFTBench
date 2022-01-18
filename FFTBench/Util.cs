@@ -20,7 +20,8 @@ namespace FFTBench
             tests.Add(new TestLomont() { Enabled = true });
             tests.Add(new TestExocortexReal32() { Enabled = true });
             tests.Add(new TestLomontReal() { Enabled = true });
-            //tests.Add(new TestFFTS() { Enabled = true });
+            tests.Add(new TestFFTS() { Enabled = true });
+            tests.Add(new TestFFTSReal() { Enabled = true });
             //tests.Add(new TestLomontReal32() { Enabled = true });
 
             //tests.Add(new TestKissFFT() { Enabled = true });

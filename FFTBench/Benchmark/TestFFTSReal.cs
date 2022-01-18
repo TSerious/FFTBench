@@ -2,7 +2,7 @@
 
 namespace FFTBench.Benchmark
 {
-    class TestFFTS : ITest
+    class TestFFTSReal : ITest
     {
         private float[] input;
         private float[] output;
@@ -14,9 +14,9 @@ namespace FFTBench.Benchmark
         {
             FFTSManager.LoadAppropriateDll(FFTSManager.InstructionType.Auto);
 
-            plan = FFTS.Complex(FFTS.Forward, data.Length);
+            plan = FFTS.Real(FFTS.Forward, data.Length);
 
-            input = ToComplex(data);
+            input = ToFloat(data);
             output = new float[plan.outSize];
         }
 
@@ -29,10 +29,11 @@ namespace FFTBench.Benchmark
         {
             FFTSManager.LoadAppropriateDll(FFTSManager.InstructionType.Auto);
 
-            using (var plan1 = FFTS.Complex(FFTS.Forward, input.Length))
-            using (var plan2 = FFTS.Complex(FFTS.Backward, input.Length))
+            using (var plan1 = FFTS.Real(FFTS.Forward, input.Length))
+            using (var plan2 = FFTS.Real(FFTS.Backward, input.Length))
             {
-                var data1 = ToComplex(input);
+                
+                var data1 = ToFloat(input);
                 var data2 = new float[plan1.outSize];
 
                 plan1.Execute(data1, data2);
@@ -48,7 +49,7 @@ namespace FFTBench.Benchmark
 
                 for (int i = 0; i < input.Length; i++)
                 {
-                    input[i] = data1[i*2];
+                    input[i] = data1[i];
                 }
 
                 if (scale)
@@ -58,26 +59,26 @@ namespace FFTBench.Benchmark
                         input[i] /= input.Length;
                     }
                 }
-
+                
                 return spectrum;
             }
         }
 
         public override string ToString()
         {
-            return "FFTS";
+            return "FFTS (real)";
         }
 
-        private float[] ToComplex(double[] data)
+        private float[] ToFloat(double[] data)
         {
-            float[] complex = new float[data.Length << 1];
+            float[] f = new float[data.Length];
 
             for (int i = 0; i < data.Length; i++)
             {
-                complex[i * 2] = (float)data[i];
+                f[i] = (float)data[i];
             }
 
-            return complex;
+            return f;
         }
     }
 }
