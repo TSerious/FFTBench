@@ -5,6 +5,17 @@ Thanks to Christian Woltering and his arcticle "Comparison of FFT Implementation
 
 Further thanks to PeterPet and his FFTS project [https://github.com/PetterPet01/FFTSSharp] which is also part of this project.
 
+The following FFT implementations can be compared:
+-	Accord
+-	AForge
+-	DSPLib
+-	Exocortex
+-	Math.NET
+-	NAudio
+-	Lomont
+-	FFTW
+-	FFTS
+
 ## Usage
 Open the solution, compile and start the FFTBench project.
 
