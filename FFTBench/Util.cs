@@ -25,7 +25,9 @@ namespace FFTBench
             tests.Add(new TestFFTW() { Enabled = true });
             tests.Add(new TestFFTWReal() { Enabled = true });
             tests.Add(new TestMKLReal() { Enabled = true });
+            tests.Add(new TestMKLRealInplace() { Enabled = true });
             tests.Add(new TestMKLReal32() { Enabled = true });
+            tests.Add(new TestMKL() { Enabled = true });
             //tests.Add(new TestLomontReal32() { Enabled = true });
             //tests.Add(new TestKissFFT() { Enabled = true });
 

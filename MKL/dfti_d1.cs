@@ -19,6 +19,7 @@ using System;
 using System.Security;
 using System.Runtime.InteropServices;
 using mkl;
+using System.Numerics;
 
 /**
  * Example showing how to call the Intel MKL FFT dfti() function.
@@ -198,22 +199,51 @@ namespace mkl
 		}
 		/** DFTI DftiComputeForward wrapper */
 		public static int DftiComputeForward(IntPtr desc,
+			double[] x)
+		{
+			return DFTINative.DftiComputeForward(desc, x);
+		}
+		/** DFTI DftiComputeForward wrapper */
+		public static int DftiComputeForward(IntPtr desc,
 			[In] float[] x_in, [Out] float[] x_out)
 		{
 			return DFTINative.DftiComputeForward(desc, x_in, x_out);
 		}
+
+		/** DFTI DftiComputeForward wrapper */
+		public static int DftiComputeForward(IntPtr desc,
+			[In] Complex[] x_in, [In] Complex[] x_out)
+		{
+			return DFTINative.DftiComputeForward(desc, x_in, x_out);
+		}
+
 		/** DFTI DftiComputeBackward wrapper */
 		public static int DftiComputeBackward(IntPtr desc,
 			[In] double[] x_in, [Out] double[] x_out)
 		{
 			return DFTINative.DftiComputeBackward(desc, x_in, x_out);
 		}
+
 		/** DFTI DftiComputeBackward wrapper */
 		public static int DftiComputeBackward(IntPtr desc,
 			[In] float[] x_in, [Out] float[] x_out)
 		{
 			return DFTINative.DftiComputeBackward(desc, x_in, x_out);
 		}
+
+		/** DFTI DftiComputeBackward wrapper */
+		public static int DftiComputeBackward(IntPtr desc,
+			[In] Complex[] x_in, [Out] Complex[] x_out)
+		{
+			return DFTINative.DftiComputeBackward(desc, x_in, x_out);
+		}
+
+		[StructLayoutAttribute(LayoutKind.Sequential)]
+		public struct MKL_Complex16
+        {
+			public double real;
+			public double imag;
+        }
 	}
 
 	/** DFTI native declarations */
@@ -256,8 +286,17 @@ namespace mkl
 		/** DFTI native DftiComputeForward declaration */
 		[DllImport("mkl_rt.dll", CallingConvention = CallingConvention.Cdecl,
 			 ExactSpelling = true, SetLastError = false)]
+		internal static extern int DftiComputeForward(IntPtr desc, double[] x);
+		/** DFTI native DftiComputeForward declaration */
+		[DllImport("mkl_rt.dll", CallingConvention = CallingConvention.Cdecl,
+			 ExactSpelling = true, SetLastError = false)]
 		internal static extern int DftiComputeForward(IntPtr desc,
 			[In] float[] x_in, [Out] float[] x_out);
+		/** DFTI native DftiComputeForward declaration */
+		[DllImport("mkl_rt.dll", CallingConvention = CallingConvention.Cdecl,
+			 ExactSpelling = true, SetLastError = false)]
+		internal static extern int DftiComputeForward(IntPtr desc,
+			[In] Complex[] x_in, [Out] Complex[] x_out);
 		/** DFTI native DftiComputeBackward declaration */
 		[DllImport("mkl_rt.dll", CallingConvention=CallingConvention.Cdecl,
 			 ExactSpelling=true, SetLastError=false)]
@@ -268,5 +307,10 @@ namespace mkl
 			 ExactSpelling = true, SetLastError = false)]
 		internal static extern int DftiComputeBackward(IntPtr desc,
 			[In] float[] x_in, [Out] float[] x_out);
+		/** DFTI native DftiComputeBackward declaration */
+		[DllImport("mkl_rt.dll", CallingConvention = CallingConvention.Cdecl,
+			 ExactSpelling = true, SetLastError = false)]
+		internal static extern int DftiComputeBackward(IntPtr desc,
+			[In] Complex[] x_in, [Out] Complex[] x_out);
 	}
 }
