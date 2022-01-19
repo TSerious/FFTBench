@@ -1,4 +1,8 @@
-﻿using MathNet.Numerics.IntegralTransforms;
+﻿using MathNet.Numerics;
+using MathNet.Numerics.IntegralTransforms;
+using MathNet.Numerics.LinearAlgebra;
+using System;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace FFTBench.Benchmark
@@ -7,15 +11,16 @@ namespace FFTBench.Benchmark
     {
         public override void FFT(bool forward)
         {
+            //Control.UseNativeMKL();
             data.CopyTo(copy, 0);
 
             if (forward)
             {
-                Fourier.Radix2Forward(copy, FourierOptions.Default);
+                Fourier.Forward(copy, FourierOptions.Default);
             }
             else
             {
-                Fourier.Radix2Inverse(copy, FourierOptions.Default);
+                Fourier.Inverse(copy, FourierOptions.Default);
             }
         }
 

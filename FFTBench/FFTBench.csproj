@@ -11,10 +11,14 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Benchmark\TestFFTWReal32.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Accord" Version="3.8.0" />
     <PackageReference Include="Accord.Math" Version="3.8.0" />
     <PackageReference Include="FFTW.NET" Version="1.0.1" />
     <PackageReference Include="MathNet.Numerics" Version="4.15.0" />
+    <PackageReference Include="MathNet.Numerics.MKL.Win-x64" Version="2.5.0" />
     <PackageReference Include="Microsoft.NETCore.Platforms" Version="1.1.0" />
     <PackageReference Include="Microsoft.Win32.Primitives" Version="4.3.0" />
     <PackageReference Include="NAudio" Version="1.8.4" />
@@ -129,17 +133,14 @@
     <None Include="Resources\log.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\FFTSSharp-05d356ee6a168d4d818b75d26975b7d025ecc754\FFTSSharp\FFTSSharp.csproj" />
     <ProjectReference Include="..\Exocortex.DSP\Exocortex.DSP.csproj" />
     <ProjectReference Include="..\FFTSSharp\FFTSSharp.csproj" />
+    <ProjectReference Include="..\MKL\MKL.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\save.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Benchmark\TestFFTWReal32.cs" />
-  </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="if not exist $(TargetDir)ffts-dlls mkdir $(TargetDir)ffts-dlls&#xD;&#xA;xcopy &quot;$(SolutionDir)FFTSSharp\ffts-dlls&quot; &quot;$(TargetDir)ffts-dlls&quot; /Y /I&#xD;&#xA;xcopy &quot;$(SolutionDir)fftw-3.3.5-dll64\libfftw3-3.dll&quot; &quot;$(TargetDir)&quot; /Y&#xD;&#xA;xcopy &quot;$(SolutionDir)fftw-3.3.5-dll64\libfftw3f-3.dll&quot; &quot;$(TargetDir)&quot; /Y&#xD;&#xA;xcopy &quot;$(SolutionDir)fftw-3.3.5-dll64\libfftw3l-3.dll&quot; &quot;$(TargetDir)&quot; /Y" />
+    <Exec Command="if not exist $(TargetDir)ffts-dlls mkdir $(TargetDir)ffts-dlls&#xD;&#xA;xcopy &quot;$(SolutionDir)FFTSSharp\ffts-dlls&quot; &quot;$(TargetDir)ffts-dlls&quot; /Y /I&#xD;&#xA;xcopy &quot;$(SolutionDir)MKL\dlls&quot; &quot;$(TargetDir)&quot; /Y /I" />
   </Target>
 </Project>

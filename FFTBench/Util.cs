@@ -22,20 +22,12 @@ namespace FFTBench
             tests.Add(new TestLomontReal() { Enabled = true });
             tests.Add(new TestFFTS() { Enabled = true });
             tests.Add(new TestFFTSReal() { Enabled = true });
+            tests.Add(new TestFFTW() { Enabled = true });
+            tests.Add(new TestFFTWReal() { Enabled = true });
+            tests.Add(new TestMKLReal() { Enabled = true });
+            tests.Add(new TestMKLReal32() { Enabled = true });
             //tests.Add(new TestLomontReal32() { Enabled = true });
-
             //tests.Add(new TestKissFFT() { Enabled = true });
-
-            if (File.Exists("libfftw3-3.dll"))
-            {
-                tests.Add(new TestFFTW() { Enabled = true });
-                tests.Add(new TestFFTWReal() { Enabled = true });
-            }
-
-            if (File.Exists("libfftw3f-3.dll"))
-            {
-                //tests.Add(new TestFFTWReal32() { Enabled = true });
-            }
 
             return tests;
         }
