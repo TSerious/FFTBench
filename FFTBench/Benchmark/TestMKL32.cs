@@ -1,4 +1,5 @@
 ﻿using mkl;
+using MKL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace FFTBench.Benchmark
 {
-    public class TestMKL : ITest
+    public class TestMKL32 : ITest
     {
         private IntPtr descriptor = new IntPtr();
-        Complex[] input;
-        Complex[] output;
+        ComplexF[] input;
+        ComplexF[] output;
 
         public bool Enabled { get; set; }
 
@@ -28,7 +29,7 @@ namespace FFTBench.Benchmark
         {
             DFTI.DftiCreateDescriptor(
                 ref descriptor,
-                DFTI.DOUBLE,
+                DFTI.SINGLE,
                 DFTI.COMPLEX,
                 1,
                 data.Length);
@@ -36,12 +37,12 @@ namespace FFTBench.Benchmark
             DFTI.DftiSetValue(descriptor, DFTI.PLACEMENT, DFTI.NOT_INPLACE);
             DFTI.DftiCommitDescriptor(descriptor);
 
-            input = new Complex[data.Length];
-            output = new Complex[data.Length];
+            input = new ComplexF[data.Length];
+            output = new ComplexF[data.Length];
 
-            for (int i = 0; i<data.Length; i++)
+            for (int i = 0; i < data.Length; i++)
             {
-                input[i] = new Complex(data[i], 0);
+                input[i] = new ComplexF((float)data[i], 0);
             }
         }
 
@@ -50,7 +51,7 @@ namespace FFTBench.Benchmark
             IntPtr desc = new IntPtr();
             if (DFTI.DftiCreateDescriptor(
                 ref desc,
-                DFTI.DOUBLE,
+                DFTI.SINGLE,
                 DFTI.COMPLEX,
                 1,
                 input.Length) != DFTI.NO_ERROR)
@@ -61,7 +62,7 @@ namespace FFTBench.Benchmark
             DFTI.DftiSetValue(desc, DFTI.PLACEMENT, DFTI.NOT_INPLACE);
             if(DFTI.DftiCommitDescriptor(desc) != DFTI.NO_ERROR)
             {
-                throw new NotImplementedException(this + ": Can't initialize descriptor for spectrum.");
+                return input;
             }
 
             Complex[] data1 = new Complex[input.Length];
@@ -100,7 +101,7 @@ namespace FFTBench.Benchmark
 
         public override string ToString()
         {
-            return "MKL";
+            return "MKL32";
         }
 
         public static double[] ToComplex(Complex[] data)

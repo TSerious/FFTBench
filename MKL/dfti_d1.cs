@@ -20,6 +20,7 @@ using System.Security;
 using System.Runtime.InteropServices;
 using mkl;
 using System.Numerics;
+using MKL;
 
 /**
  * Example showing how to call the Intel MKL FFT dfti() function.
@@ -217,6 +218,13 @@ namespace mkl
 			return DFTINative.DftiComputeForward(desc, x_in, x_out);
 		}
 
+		/** DFTI DftiComputeForward wrapper */
+		public static int DftiComputeForward(IntPtr desc,
+			[In] ComplexF[] x_in, [In] ComplexF[] x_out)
+		{
+			return DFTINative.DftiComputeForward(desc, x_in, x_out);
+		}
+
 		/** DFTI DftiComputeBackward wrapper */
 		public static int DftiComputeBackward(IntPtr desc,
 			[In] double[] x_in, [Out] double[] x_out)
@@ -297,6 +305,11 @@ namespace mkl
 			 ExactSpelling = true, SetLastError = false)]
 		internal static extern int DftiComputeForward(IntPtr desc,
 			[In] Complex[] x_in, [Out] Complex[] x_out);
+		/** DFTI native DftiComputeForward declaration */
+		[DllImport("mkl_rt.dll", CallingConvention = CallingConvention.Cdecl,
+			 ExactSpelling = true, SetLastError = false)]
+		internal static extern int DftiComputeForward(IntPtr desc,
+			[In] ComplexF[] x_in, [Out] ComplexF[] x_out);
 		/** DFTI native DftiComputeBackward declaration */
 		[DllImport("mkl_rt.dll", CallingConvention=CallingConvention.Cdecl,
 			 ExactSpelling=true, SetLastError=false)]
