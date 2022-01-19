@@ -15,6 +15,7 @@ The following FFT implementations can be compared:
 -	Lomont
 -	FFTW
 -	FFTS
+-	MKL (by Intel)
 
 ## Usage
 Open the solution, compile and start the FFTBench project.
