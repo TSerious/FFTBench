@@ -189,17 +189,47 @@ namespace FFTBench
             var model = new PlotModel
             {
                 Title = "Benchmark Result",
-                LegendPlacement = LegendPlacement.Outside,
-                LegendPosition = LegendPosition.RightMiddle,
-                LegendOrientation = LegendOrientation.Vertical,
-                LegendBorderThickness = 0
+                IsLegendVisible = true,
+            };
+            model.Legends.Add(new OxyPlot.Legends.Legend()
+            {
+                IsLegendVisible = true,
+                LegendPlacement = OxyPlot.Legends.LegendPlacement.Outside,
+                LegendPosition = OxyPlot.Legends.LegendPosition.RightMiddle,
+                LegendOrientation = OxyPlot.Legends.LegendOrientation.Vertical,
+                LegendBorderThickness = 0,
+            });
+
+            var categoryAxis = new CategoryAxis 
+            {
+                Position = AxisPosition.Bottom,
+                Key = "Category"
+            };
+            var valueAxis = new LinearAxis
+            {
+                Key = "Value",
+                Position = AxisPosition.Left,
+                MinimumPadding = 0,
+                MaximumPadding = 0.06,
+                AbsoluteMinimum = -1,
+                ExtraGridlines = new double[] { 0 },
+                ExtraGridlineStyle = LineStyle.Solid,
+                ExtraGridlineThickness = 1,
+                ExtraGridlineColor = OxyColors.Red,
+                MajorGridlineThickness = 1,
+                MinorGridlineThickness = 1,
+                MajorGridlineStyle = LineStyle.Solid,
+                MinorGridlineStyle = LineStyle.Solid,
+                MajorGridlineColor = OxyColors.Gray,
+                MinorGridlineColor = OxyColors.LightGray,
             };
 
-            var categoryAxis = new CategoryAxis { Position = AxisPosition.Bottom };
+            model.Axes.Add(categoryAxis);
+            model.Axes.Add(valueAxis);
 
-            var series = new Dictionary<string, ColumnSeries>();
+            var series = new Dictionary<string, BarSeries>();
 
-            ColumnSeries s;
+            BarSeries s;
 
             foreach (var item in results)
             {
@@ -212,36 +242,29 @@ namespace FFTBench
 
                     if (!series.TryGetValue(name, out s))
                     {
-                        s = new ColumnSeries()
+                        s = new BarSeries()
                         {
                             Title = name,
                             IsStacked = false,
                             StrokeColor = OxyColors.Black,
-                            StrokeThickness = 1
+                            StrokeThickness = 1,
+                            XAxisKey = "Value",
+                            YAxisKey = "Category"
                         };
 
                         series[name] = s;
                     }
 
-                    s.Items.Add(new ColumnItem { Value = result.Value.Total });
+                    s.Items.Add(new BarItem { Value = result.Value.Total });
                 }
 
                 categoryAxis.Labels.Add(size.ToString());
             }
 
-            var valueAxis = new LinearAxis { Position = AxisPosition.Left, MinimumPadding = 0, MaximumPadding = 0.06, AbsoluteMinimum = -1 };
-            valueAxis.ExtraGridlines = new double[] { 0 };
-            valueAxis.ExtraGridlineStyle = LineStyle.Solid;
-            valueAxis.ExtraGridlineThickness = 1;
-            valueAxis.ExtraGridlineColor = OxyColors.Red;
-
             foreach (var item in series.Values)
             {
                 model.Series.Add(item);
             }
-
-            model.Axes.Add(categoryAxis);
-            model.Axes.Add(valueAxis);
 
             return model;
         }

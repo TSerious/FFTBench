@@ -138,7 +138,14 @@ namespace FFTBench.Benchmark
 
         public override string ToString()
         {
-            return "MKL (real)";
+            string name = "MKL (real)";
+
+            if (StretchInput)
+            {
+                name += "(stretched)";
+            }
+
+            return name;
         }
 
         public static double[] ToComplex(Complex[] data)

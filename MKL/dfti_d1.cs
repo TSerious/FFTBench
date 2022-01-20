@@ -158,8 +158,14 @@ namespace mkl
 		public static int DftiCreateDescriptor(ref IntPtr desc,
 			int precision, int domain, int dimention, int length)
 		{
-			return DFTINative.DftiCreateDescriptor(ref desc,
-				precision, domain, dimention, length);
+            try
+            {
+				return DFTINative.DftiCreateDescriptor(ref desc,precision, domain, dimention, length);
+			}
+			catch(Exception e)
+            {
+				return DFTI.MKL_INTERNAL_ERROR;
+            }
 		}
 		/** DFTI DftiFreeDescriptor wrapper */
 		public static int DftiFreeDescriptor(ref IntPtr desc)

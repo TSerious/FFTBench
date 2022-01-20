@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FFTBench": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

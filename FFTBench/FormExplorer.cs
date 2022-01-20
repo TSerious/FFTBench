@@ -105,12 +105,12 @@ namespace FFTBench
             }
             catch (Exception e)
             {
-                plot1.Model.Series.Clear();
-                plot1.Model.InvalidatePlot(true);
-                plot2.Model.Series.Clear();
-                plot2.Model.InvalidatePlot(true);
-                plot3.Model.Series.Clear();
-                plot3.Model.InvalidatePlot(true);
+                plot1.Model?.Series.Clear();
+                plot1.Model?.InvalidatePlot(true);
+                plot2.Model?.Series.Clear();
+                plot2.Model?.InvalidatePlot(true);
+                plot3.Model?.Series.Clear();
+                plot3.Model?.InvalidatePlot(true);
                 MessageBox.Show(e.Message);
             }
         }
