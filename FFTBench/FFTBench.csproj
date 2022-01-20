@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ProjectGuid>{3F9950C6-C039-4322-9590-EDED88AF1154}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
     <AssemblyTitle>FFTBench</AssemblyTitle>
     <Product>FFTBench</Product>
     <Copyright>Copyright ©  2016</Copyright>
