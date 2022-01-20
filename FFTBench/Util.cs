@@ -12,24 +12,33 @@ namespace FFTBench
             var tests = new List<ITest>();
 
             tests.Add(new TestAccord() { Enabled = true });
+            tests.Add(new TestAccord() { Enabled = true, StretchInput = true });
             tests.Add(new TestAForge() { Enabled = true });
             tests.Add(new TestMathNet() { Enabled = true });
+            tests.Add(new TestMathNet() { Enabled = true, StretchInput = true });
             tests.Add(new TestNAudio() { Enabled = true });
             tests.Add(new TestDSPLib() { Enabled = true });
-            tests.Add(new TestExocortex() { Enabled = true });
             tests.Add(new TestLomont() { Enabled = true });
-            tests.Add(new TestExocortexReal32() { Enabled = true });
             tests.Add(new TestLomontReal() { Enabled = true });
+            tests.Add(new TestExocortex() { Enabled = true });
+            tests.Add(new TestExocortexReal32() { Enabled = true });
             tests.Add(new TestFFTS() { Enabled = true });
             tests.Add(new TestFFTS() { Enabled = true, StretchInput = true });
             tests.Add(new TestFFTSReal() { Enabled = true });
+            tests.Add(new TestFFTSReal() { Enabled = true, StretchInput = true });
             tests.Add(new TestFFTW() { Enabled = true });
+            tests.Add(new TestFFTW() { Enabled = true, StretchInput = true });
             tests.Add(new TestFFTWReal() { Enabled = true });
+            tests.Add(new TestFFTWReal() { Enabled = true, StretchInput = true });
             tests.Add(new TestMKLReal() { Enabled = true });
+            tests.Add(new TestMKLReal() { Enabled = true, StretchInput = true });
             tests.Add(new TestMKLRealInplace() { Enabled = true });
             tests.Add(new TestMKLReal32() { Enabled = true });
+            tests.Add(new TestMKLReal32() { Enabled = true, StretchInput = true });
             tests.Add(new TestMKL() { Enabled = true });
+            tests.Add(new TestMKL() { Enabled = true, StretchInput = true });
             tests.Add(new TestMKL32() { Enabled = true });
+            tests.Add(new TestMKL32() { Enabled = true, StretchInput = true });
             //tests.Add(new TestLomontReal32() { Enabled = true });
             //tests.Add(new TestKissFFT() { Enabled = true });
 

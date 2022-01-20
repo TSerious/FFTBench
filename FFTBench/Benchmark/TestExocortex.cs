@@ -28,14 +28,7 @@ namespace FFTBench.Benchmark
 
         public override string ToString()
         {
-            string name = "Exocortex";
-
-            if (StretchInput)
-            {
-                name += "(stretched)";
-            }
-
-            return name;
+            return "Exocortex";
         }
     }
 }

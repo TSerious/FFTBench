@@ -11,15 +11,8 @@ namespace FFTBench.Benchmark
 
         public bool Enabled { get; set; }
 
-        public bool StretchInput { get; set; }
-
         public void Initialize(double[] data)
         {
-            if (StretchInput)
-            {
-                Helper.StretchToNextPowerOf2(ref data);
-            }
-
             this.copy = Helper.ConvertToFloat(data);
             this.data = new float[data.Length];
         }
@@ -35,11 +28,6 @@ namespace FFTBench.Benchmark
 
         public double[] Spectrum(double[] input, bool scale, out double[] backwardResult)
         {
-            if (StretchInput)
-            {
-                Helper.StretchToNextPowerOf2(ref input);
-            }
-
             ToComplex(Helper.ConvertToFloat(input), out ComplexF[] data);
             Fourier.FFT(data, data.Length, FourierDirection.Forward);
             var spectrum = ComputeSpectrum(data);
@@ -51,14 +39,7 @@ namespace FFTBench.Benchmark
 
         public override string ToString()
         {
-            string name = "Exocortex (real32)";
-
-            if (StretchInput)
-            {
-                name += "(stretched)";
-            }
-
-            return name;
+            return "Exocortex (real32)";
         }
 
         public static void ToComplex(float[] data, out ComplexF[] result)

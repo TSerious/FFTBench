@@ -13,15 +13,8 @@ namespace FFTBench.Benchmark
 
         public bool Enabled { get; set; }
 
-        public bool StretchInput { get; set; }
-
         public void Initialize(double[] data)
         {
-            if (StretchInput)
-            {
-                Helper.StretchToNextPowerOf2(ref data);
-            }
-
             this.data = (double[])data.Clone();
             this.copy = new double[data.Length];
 
@@ -39,11 +32,6 @@ namespace FFTBench.Benchmark
 
         public double[] Spectrum(double[] input, bool scale, out double[] backwardResult)
         {
-            if (StretchInput)
-            {
-                Helper.StretchToNextPowerOf2(ref input);
-            }
-
             if (Helper.GetNextPowerOf2(input.Length) != input.Length)
             {
                 throw new NotImplementedException(this + ": Size must be a power of 2.");
@@ -78,14 +66,7 @@ namespace FFTBench.Benchmark
 
         public override string ToString()
         {
-            string name = "Lomont (real)";
-
-            if (StretchInput)
-            {
-                name += "(stretched)";
-            }
-
-            return name;
+            return "Lomont (real)";
         }
     }
 }

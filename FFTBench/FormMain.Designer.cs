@@ -158,7 +158,8 @@
             "50",
             "100",
             "200",
-            "500"});
+            "500",
+            "1000"});
             this.comboRepeat.Name = "comboRepeat";
             this.comboRepeat.Size = new System.Drawing.Size(75, 25);
             // 

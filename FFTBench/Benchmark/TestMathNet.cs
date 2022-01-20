@@ -9,6 +9,8 @@ namespace FFTBench.Benchmark
 {
     public class TestMathNet : BaseTest
     {
+        public bool StretchInput { get; set; }
+
         public override void FFT(bool forward)
         {
             data.CopyTo(copy, 0);

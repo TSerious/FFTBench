@@ -93,7 +93,6 @@ namespace FFTBench.Benchmark
             backwardResult = Helper.ToReal(data1);
             Helper.Scale(ref backwardResult, scale);
 
-
             DFTI.DftiFreeDescriptor(ref desc);
 
             return spectrum;

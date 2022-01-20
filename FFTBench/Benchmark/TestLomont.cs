@@ -12,15 +12,8 @@ namespace FFTBench.Benchmark
 
         public bool Enabled { get; set; }
 
-        public bool StretchInput { get; set; }
-
         public void Initialize(double[] data)
         {
-            if (StretchInput)
-            {
-                Helper.StretchToNextPowerOf2(ref data);
-            }
-
             this.data = Helper.ToComplex(data);
             this.copy = new double[data.Length << 1];
         }
@@ -33,11 +26,6 @@ namespace FFTBench.Benchmark
 
         public double[] Spectrum(double[] input, bool scale, out double[] backwardResult)
         {
-            if (StretchInput)
-            {
-                Helper.StretchToNextPowerOf2(ref input);
-            }
-
             var fft = new LomontFFT();
             var data = Helper.ToComplex(input);
             fft.FFT(data, true);
@@ -51,14 +39,7 @@ namespace FFTBench.Benchmark
 
         public override string ToString()
         {
-            string name = "Lomont";
-
-            if (StretchInput)
-            {
-                name += "(stretched)";
-            }
-
-            return name;
+            return "Lomont";
         }
     }
 }

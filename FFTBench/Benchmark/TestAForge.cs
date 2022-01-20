@@ -15,11 +15,6 @@ namespace FFTBench.Benchmark
 
         public override double[] Spectrum(double[] input, bool scale, out double[] backwardResult)
         {
-            if (StretchInput)
-            {
-                Helper.StretchToNextPowerOf2(ref input);
-            }
-
             Helper.ToComplex(input, out data);
             FourierTransform.FFT(data, FourierTransform.Direction.Forward);
             var spectrum = Helper.ComputeSpectrum(data);
@@ -31,14 +26,7 @@ namespace FFTBench.Benchmark
 
         public override string ToString()
         {
-            string name = "AForge";
-
-            if (StretchInput)
-            {
-                name += "(stretched)";
-            }
-
-            return name;
+            return "AForge";
         }
     }
 }

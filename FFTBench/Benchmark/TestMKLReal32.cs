@@ -16,13 +16,15 @@ namespace FFTBench.Benchmark
 
         public bool Enabled { get; set; }
 
-        public void FFT(bool forward)
-        {
-            DFTI.DftiComputeForward(descriptor, input, output);
-        }
+        public bool StretchInput { get; set; }
 
         public void Initialize(double[] data)
         {
+            if (StretchInput)
+            {
+                Helper.StretchToNextPowerOf2(ref data);
+            }
+
             int res = DFTI.DftiCreateDescriptor(
                 ref descriptor,
                 DFTI.SINGLE,
@@ -56,8 +58,21 @@ namespace FFTBench.Benchmark
             output = new float[data.Length];
         }
 
+        public void FFT(bool forward)
+        {
+            if (DFTI.DftiComputeForward(descriptor, input, output) != DFTI.NO_ERROR)
+            {
+                throw new Exception(this + ": Can't run FFT.");
+            }
+        }
+
         public double[] Spectrum(double[] input, bool scale, out double[] backwardResult)
         {
+            if (StretchInput)
+            {
+                Helper.StretchToNextPowerOf2(ref input);
+            }
+
             IntPtr desc = new IntPtr();
             int res = DFTI.DftiCreateDescriptor(
                 ref desc,
@@ -116,7 +131,14 @@ namespace FFTBench.Benchmark
 
         public override string ToString()
         {
-            return "MKL (real32)";
+            string name = "MKL (real32)";
+
+            if (StretchInput)
+            {
+                name += "(stretched)";
+            }
+
+            return name;
         }
 
         public static float[] ToComplex(Complex[] data)

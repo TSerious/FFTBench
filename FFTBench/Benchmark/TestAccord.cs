@@ -5,6 +5,18 @@ namespace FFTBench.Benchmark
 {
     public class TestAccord : BaseTest
     {
+        public bool StretchInput { get; set; }
+
+        public override void Initialize(double[] data)
+        {
+            if (StretchInput)
+            {
+                Helper.StretchToNextPowerOf2(ref data);
+            }
+
+            base.Initialize(data);
+        }
+
         public override void FFT(bool forward)
         {
             data.CopyTo(copy, 0);

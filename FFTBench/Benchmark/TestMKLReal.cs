@@ -25,7 +25,7 @@ namespace FFTBench.Benchmark
                 Helper.StretchToNextPowerOf2(ref data);
             }
 
-            if (Helper.GetNextPowerOf2(input.Length) != input.Length)
+            if (Helper.GetNextPowerOf2(data.Length) != data.Length)
             {
                 throw new NotSupportedException(this + "Size must be a power of 2");
             }
@@ -77,11 +77,6 @@ namespace FFTBench.Benchmark
             if (StretchInput)
             {
                 Helper.StretchToNextPowerOf2(ref input);
-            }
-
-            if (Helper.GetNextPowerOf2(input.Length) != input.Length)
-            {
-                throw new NotSupportedException(this + "Size must be a power of 2");
             }
 
             IntPtr desc = new IntPtr();
