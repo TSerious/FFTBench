@@ -6,26 +6,22 @@ namespace FFTBench.Benchmark
 {
     public class TestExocortexReal32 : ITest
     {
-        int size;
-
         float[] data;
         float[] copy;
 
         public bool Enabled { get; set; }
 
+        public bool StretchInput { get; set; }
+
         public void Initialize(double[] data)
         {
-            int length = data.Length;
-
-            this.copy = new float[length];
-            this.data = new float[length];
-
-            for (int i = 0; i < length; i++)
+            if (StretchInput)
             {
-                this.data[i] = (float)data[i];
+                Helper.StretchToNextPowerOf2(ref data);
             }
 
-            size = Util.Log2(length);
+            this.copy = Helper.ConvertToFloat(data);
+            this.data = new float[data.Length];
         }
 
         public void FFT(bool forward)
@@ -37,62 +33,66 @@ namespace FFTBench.Benchmark
                 FourierDirection.Backward);
         }
 
-        public double[] Spectrum(double[] input, bool scale)
+        public double[] Spectrum(double[] input, bool scale, out double[] backwardResult)
         {
-            var data = ToComplex(input);
+            if (StretchInput)
+            {
+                Helper.StretchToNextPowerOf2(ref input);
+            }
 
+            ToComplex(Helper.ConvertToFloat(input), out ComplexF[] data);
             Fourier.FFT(data, data.Length, FourierDirection.Forward);
-
             var spectrum = ComputeSpectrum(data);
-
             Fourier.FFT(data, data.Length, FourierDirection.Backward);
-
-            ToDouble(data, input);
+            backwardResult = ToReal(data);
 
             return spectrum;
-        }
-
-        private double[] ComputeSpectrum(Complex[] fft)
-        {
-            int length = fft.Length / 2;
-
-            var result = new double[length];
-
-            for (int i = 0; i < length; i++)
-            {
-                result[i] = fft[i].Magnitude;
-            }
-
-            return result;
-        }
-
-        private Complex[] ToComplex(double[] data)
-        {
-            int length = data.Length;
-
-            var result = new Complex[length];
-
-            for (int i = 0; i < length; i++)
-            {
-                result[i] = new Complex(data[i], 0.0);
-            }
-
-            return result;
-        }
-
-        private void ToDouble(Complex[] data, double[] target)
-        {
-            int length = data.Length;
-
-            for (int i = 0; i < length; i++)
-            {
-                target[i] = data[i].Real;
-            }
-        }
+        }        
 
         public override string ToString()
         {
-            return "Exocortex (real)";
+            string name = "Exocortex (real32)";
+
+            if (StretchInput)
+            {
+                name += "(stretched)";
+            }
+
+            return name;
+        }
+
+        public static void ToComplex(float[] data, out ComplexF[] result)
+        {
+            result = new ComplexF[data.Length];
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                result[i] = new ComplexF(data[i], 0);
+            }
+        }
+
+        public static double[] ComputeSpectrum(ComplexF[] fft)
+        {
+            var result = new double[fft.Length];
+
+            for (int i = 0; i < fft.Length; i++)
+            {
+                result[i] = Math.Sqrt(fft[i].Re * fft[i].Re + fft[i].Im * fft[i].Im);
+            }
+
+            return result;
+        }
+
+        public static double[] ToReal(ComplexF[] data)
+        {
+            double[] target = new double[data.Length];
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                target[i] = data[i].Re;
+            }
+
+            return target;
         }
     }
 }

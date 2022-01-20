@@ -5,8 +5,6 @@ namespace FFTBench.Benchmark
 {
     public class TestLomont : ITest
     {
-        int size;
-
         double[] copy;
         double[] data;
 
@@ -14,49 +12,53 @@ namespace FFTBench.Benchmark
 
         public bool Enabled { get; set; }
 
+        public bool StretchInput { get; set; }
+
         public void Initialize(double[] data)
         {
-            int length = data.Length;
-
-            this.data = new double[2 * length];
-            this.copy = new double[2 * length];
-
-            for (int i = 0; i < length; i++)
+            if (StretchInput)
             {
-                this.data[2 * i] = data[i];
-                this.data[2 * i + 1] = 0.0;
+                Helper.StretchToNextPowerOf2(ref data);
             }
 
-            size = Util.Log2(data.Length);
+            this.data = Helper.ToComplex(data);
+            this.copy = new double[data.Length << 1];
         }
 
         public void FFT(bool forward)
         {
             data.CopyTo(copy, 0);
-
             fft.FFT(copy, forward);
         }
 
-        public double[] Spectrum(double[] input, bool scale)
+        public double[] Spectrum(double[] input, bool scale, out double[] backwardResult)
         {
+            if (StretchInput)
+            {
+                Helper.StretchToNextPowerOf2(ref input);
+            }
+
             var fft = new LomontFFT();
-
             var data = Helper.ToComplex(input);
-
             fft.FFT(data, true);
-
             var spectrum = Helper.ComputeSpectrum(data);
-
             fft.FFT(data, false);
-
-            Helper.ToDouble(data, input);
+            backwardResult = Helper.ToReal(data);
+            Helper.Scale(ref backwardResult, scale);
 
             return spectrum;
         }
 
         public override string ToString()
         {
-            return "Lomont";
+            string name = "Lomont";
+
+            if (StretchInput)
+            {
+                name += "(stretched)";
+            }
+
+            return name;
         }
     }
 }

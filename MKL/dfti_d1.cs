@@ -246,6 +246,13 @@ namespace mkl
 			return DFTINative.DftiComputeBackward(desc, x_in, x_out);
 		}
 
+		/** DFTI DftiComputeBackward wrapper */
+		public static int DftiComputeBackward(IntPtr desc,
+			[In] ComplexF[] x_in, [Out] ComplexF[] x_out)
+		{
+			return DFTINative.DftiComputeBackward(desc, x_in, x_out);
+		}
+
 		[StructLayoutAttribute(LayoutKind.Sequential)]
 		public struct MKL_Complex16
         {
@@ -325,5 +332,10 @@ namespace mkl
 			 ExactSpelling = true, SetLastError = false)]
 		internal static extern int DftiComputeBackward(IntPtr desc,
 			[In] Complex[] x_in, [Out] Complex[] x_out);
+		/** DFTI native DftiComputeBackward declaration */
+		[DllImport("mkl_rt.dll", CallingConvention = CallingConvention.Cdecl,
+			 ExactSpelling = true, SetLastError = false)]
+		internal static extern int DftiComputeBackward(IntPtr desc,
+			[In] ComplexF[] x_in, [Out] ComplexF[] x_out);
 	}
 }

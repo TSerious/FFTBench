@@ -17,6 +17,43 @@ namespace FFTBench.Benchmark
 
         public bool Enabled { get; set; }
 
+        public bool StretchInput { get; set; }
+
+        public void Initialize(double[] data)
+        {
+            if (StretchInput)
+            {
+                Helper.StretchToNextPowerOf2(ref data);
+            }
+
+            int res = DFTI.DftiCreateDescriptor(
+                ref descriptor,
+                DFTI.SINGLE,
+                DFTI.COMPLEX,
+                1,
+                data.Length);
+
+            if (res != DFTI.NO_ERROR)
+            {
+                throw new Exception(this + ": Can't initialize");
+            }
+
+            res = DFTI.DftiSetValue(descriptor, DFTI.PLACEMENT, DFTI.NOT_INPLACE);
+            if (res != DFTI.NO_ERROR)
+            {
+                throw new Exception(this + ": Can't initialize");
+            }
+
+            res = DFTI.DftiCommitDescriptor(descriptor);
+            if (res != DFTI.NO_ERROR)
+            {
+                throw new Exception(this + ": Can't initialize");
+            }
+
+            ToComplex(data, out input);
+            output = new ComplexF[data.Length];
+        }
+
         public void FFT(bool forward)
         {
             if (DFTI.DftiComputeForward(descriptor, input, output) != DFTI.NO_ERROR)
@@ -25,74 +62,57 @@ namespace FFTBench.Benchmark
             }
         }
 
-        public void Initialize(double[] data)
+        public double[] Spectrum(double[] input, bool scale, out double[] backwardResult)
         {
-            DFTI.DftiCreateDescriptor(
-                ref descriptor,
-                DFTI.SINGLE,
-                DFTI.COMPLEX,
-                1,
-                data.Length);
-
-            DFTI.DftiSetValue(descriptor, DFTI.PLACEMENT, DFTI.NOT_INPLACE);
-            DFTI.DftiCommitDescriptor(descriptor);
-
-            input = new ComplexF[data.Length];
-            output = new ComplexF[data.Length];
-
-            for (int i = 0; i < data.Length; i++)
+            if (StretchInput)
             {
-                input[i] = new ComplexF((float)data[i], 0);
+                Helper.StretchToNextPowerOf2(ref input);
             }
-        }
 
-        public double[] Spectrum(double[] input, bool scale)
-        {
             IntPtr desc = new IntPtr();
-            if (DFTI.DftiCreateDescriptor(
+            int res = DFTI.DftiCreateDescriptor(
                 ref desc,
                 DFTI.SINGLE,
                 DFTI.COMPLEX,
                 1,
-                input.Length) != DFTI.NO_ERROR)
+                input.Length);
+
+            if (res != DFTI.NO_ERROR)
             {
-                return input;
+                throw new Exception(this + ": Can't initialize");
             }
 
-            DFTI.DftiSetValue(desc, DFTI.PLACEMENT, DFTI.NOT_INPLACE);
-            if(DFTI.DftiCommitDescriptor(desc) != DFTI.NO_ERROR)
+            res = DFTI.DftiSetValue(desc, DFTI.PLACEMENT, DFTI.NOT_INPLACE);
+            if (res != DFTI.NO_ERROR)
             {
-                return input;
+                throw new Exception(this + ": Can't initialize");
             }
 
-            Complex[] data1 = new Complex[input.Length];
-            Complex[] data2 = new Complex[input.Length];
-
-            for (int i = 0; i < input.Length; i++)
+            res = DFTI.DftiCommitDescriptor(desc);
+            if (res != DFTI.NO_ERROR)
             {
-                data1[i] = new Complex(input[i],0);
+                throw new Exception(this + ": Can't initialize");
             }
 
-            if(DFTI.DftiComputeForward(desc, data1, data2) != DFTI.NO_ERROR)
+            ToComplex(input, out ComplexF[] data1);
+            ComplexF[] data2 = new ComplexF[input.Length];
+
+            res = DFTI.DftiComputeForward(desc, data1, data2);
+            if (res != DFTI.NO_ERROR)
             {
-                return input;
+                throw new Exception(this + ": Can't compute fft.");
             }
-            
-            var spectrum = Helper.ComputeSpectrum(ToComplex(data2));
+
+            var spectrum = ComputeSpectrum(data2);
 
             DFTI.DftiComputeBackward(desc, data2, data1);
-            for (int i = 0; i < input.Length; i++)
+            if (res != DFTI.NO_ERROR)
             {
-                input[i] = data1[i].Real;
+                throw new Exception(this + ": Can't compute fft.");
             }
 
-            if (scale)
-            {
-                for (int i = 0; i < input.Length; i++)
-                {
-                    input[i] /= input.Length;
-                }
-            }
+            backwardResult = ToReal(data1);
+            Helper.Scale(ref backwardResult, scale);
 
             DFTI.DftiFreeDescriptor(ref desc);
 
@@ -101,20 +121,48 @@ namespace FFTBench.Benchmark
 
         public override string ToString()
         {
-            return "MKL32";
+            string name = "MKL32";
+
+            if (StretchInput)
+            {
+                name += "(stretched)";
+            }
+
+            return name;
         }
 
-        public static double[] ToComplex(Complex[] data)
+        public static void ToComplex(double[] data, out ComplexF[] result)
         {
-            double[] complex = new double[data.Length << 1];
+            result = new ComplexF[data.Length];
 
             for (int i = 0; i < data.Length; i++)
             {
-                complex[i * 2] = data[i].Real;
-                complex[(i * 2) + 1] = data[i].Imaginary;
+                result[i] = new ComplexF((float)data[i], 0);
+            }
+        }
+
+        public static double[] ComputeSpectrum(ComplexF[] fft)
+        {
+            var result = new double[fft.Length];
+
+            for (int i = 0; i < fft.Length; i++)
+            {
+                result[i] = Math.Sqrt(fft[i].Real * fft[i].Real + fft[i].Imaginary * fft[i].Imaginary);
             }
 
-            return complex;
+            return result;
+        }
+
+        public static double[] ToReal(ComplexF[] data)
+        {
+            double[] target = new double[data.Length];
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                target[i] = data[i].Real;
+            }
+
+            return target;
         }
     }
 }

@@ -1,29 +1,26 @@
-﻿using Accord.Math;
+﻿using Exocortex.DSP;
+using System.Numerics;
 
 namespace FFTBench.Benchmark
 {
-    public class TestAForge : BaseTest
+    public class TestExocortexQuick : BaseTest
     {
         public override void FFT(bool forward)
         {
             data.CopyTo(copy, 0);
-            
-            FourierTransform.FFT(copy, forward ?
-                FourierTransform.Direction.Forward :
-                FourierTransform.Direction.Backward);
+
+            Fourier.FFT_Quick(copy, copy.Length, forward ?
+                FourierDirection.Forward :
+                FourierDirection.Backward);
         }
 
         public override double[] Spectrum(double[] input, bool scale, out double[] backwardResult)
         {
-            if (StretchInput)
-            {
-                Helper.StretchToNextPowerOf2(ref input);
-            }
-
             Helper.ToComplex(input, out data);
-            FourierTransform.FFT(data, FourierTransform.Direction.Forward);
+
+            Fourier.FFT_Quick(data, data.Length, FourierDirection.Forward);
             var spectrum = Helper.ComputeSpectrum(data);
-            FourierTransform.FFT(data, FourierTransform.Direction.Backward);
+            Fourier.FFT_Quick(data, data.Length, FourierDirection.Backward);
             backwardResult = Helper.ToReal(data);
 
             return spectrum;
@@ -31,7 +28,7 @@ namespace FFTBench.Benchmark
 
         public override string ToString()
         {
-            string name = "AForge";
+            string name = "ExocortexQuick";
 
             if (StretchInput)
             {

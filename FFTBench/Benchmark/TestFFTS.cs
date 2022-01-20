@@ -1,4 +1,5 @@
 ﻿using PetterPet.FFTSSharp;
+using System;
 
 namespace FFTBench.Benchmark
 {
@@ -10,13 +11,19 @@ namespace FFTBench.Benchmark
 
         public bool Enabled { get; set; }
 
+        public bool StretchInput { get; set; }
+
         public void Initialize(double[] data)
         {
             FFTSManager.LoadAppropriateDll(FFTSManager.InstructionType.Auto);
 
-            plan = FFTS.Complex(FFTS.Forward, data.Length);
+            if (StretchInput)
+            {
+                Helper.StretchToNextPowerOf2(ref data);
+            }
 
-            input = ToComplex(data);
+            plan = FFTS.Complex(FFTS.Forward, data.Length);
+            input = Helper.ToComplexF(data);
             output = new float[plan.outSize];
         }
 
@@ -25,39 +32,29 @@ namespace FFTBench.Benchmark
             plan.Execute(input, output);
         }
 
-        public double[] Spectrum(double[] input, bool scale)
+        public double[] Spectrum(double[] input, bool scale, out double[] backwardResult)
         {
             FFTSManager.LoadAppropriateDll(FFTSManager.InstructionType.Auto);
+
+            int originalSize = input.Length;
+            if (StretchInput)
+            {
+                Helper.StretchToNextPowerOf2(ref input);
+            }
 
             using (var plan1 = FFTS.Complex(FFTS.Forward, input.Length))
             using (var plan2 = FFTS.Complex(FFTS.Backward, input.Length))
             {
-                var data1 = ToComplex(input);
+                var data1 = Helper.ToComplexF(input);
                 var data2 = new float[plan1.outSize];
 
                 plan1.Execute(data1, data2);
-
-                float[] temp = new float[input.Length << 1];
-                for (int i = 0; i < data2.Length; i++)
-                {
-                    temp[i] = (float)data2[i];
-                }
-                var spectrum = Helper.ComputeSpectrum(temp);
-
+                var spectrum = Helper.ComputeSpectrum(data2);
                 plan2.Execute(data2, data1);
+                backwardResult = Helper.ConvertToDouble(Helper.ToReal(data1));
+                Helper.UndoStretch(ref backwardResult, originalSize);
 
-                for (int i = 0; i < input.Length; i++)
-                {
-                    input[i] = data1[i*2];
-                }
-
-                if (scale)
-                {
-                    for (int i = 0; i < input.Length; i++)
-                    {
-                        input[i] /= input.Length;
-                    }
-                }
+                Helper.Scale(ref backwardResult, scale);
 
                 return spectrum;
             }
@@ -65,19 +62,14 @@ namespace FFTBench.Benchmark
 
         public override string ToString()
         {
-            return "FFTS";
-        }
+            string name = "FFTS_32";
 
-        private float[] ToComplex(double[] data)
-        {
-            float[] complex = new float[data.Length << 1];
-
-            for (int i = 0; i < data.Length; i++)
+            if (StretchInput)
             {
-                complex[i * 2] = (float)data[i];
+                name += "(stretched)";
             }
 
-            return complex;
+            return name;
         }
     }
 }

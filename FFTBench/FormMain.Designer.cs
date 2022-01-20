@@ -96,6 +96,7 @@
             // 
             this.comboSize1.AutoCompleteCustomSource.AddRange(new string[] {
             "128",
+            "200",
             "256",
             "512",
             "1024",
@@ -106,6 +107,7 @@
             this.comboSize1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboSize1.Items.AddRange(new object[] {
             "128",
+            "200",
             "256",
             "512",
             "1024",
@@ -127,6 +129,7 @@
             this.comboSize2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboSize2.Items.AddRange(new object[] {
             "128",
+            "200",
             "256",
             "512",
             "1024",

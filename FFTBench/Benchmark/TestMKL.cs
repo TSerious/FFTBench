@@ -16,37 +16,52 @@ namespace FFTBench.Benchmark
 
         public bool Enabled { get; set; }
 
+        public bool StretchInput { get; set; }
+
+        public void Initialize(double[] data)
+        {
+            if (StretchInput)
+            {
+                Helper.StretchToNextPowerOf2(ref data);
+            }
+
+            int res = DFTI.DftiCreateDescriptor(ref descriptor, DFTI.DOUBLE, DFTI.COMPLEX, 1, data.Length);
+            if (res != DFTI.NO_ERROR)
+            {
+                throw new Exception(this + ": Can't initialize");
+            }
+
+            res = DFTI.DftiSetValue(descriptor, DFTI.PLACEMENT, DFTI.NOT_INPLACE);
+            if (res != DFTI.NO_ERROR)
+            {
+                throw new Exception(this + ": Can't initialize");
+            }
+
+            res = DFTI.DftiCommitDescriptor(descriptor);
+            if (res != DFTI.NO_ERROR)
+            {
+                throw new Exception(this + ": Can't commit desciptor.");
+            }
+
+            Helper.ToComplex(data, out input);
+            output = new Complex[data.Length];
+        }
+
         public void FFT(bool forward)
         {
             if (DFTI.DftiComputeForward(descriptor, input, output) != DFTI.NO_ERROR)
             {
-                throw new NotImplementedException(this + ": Can't run fft");
+                throw new Exception(this + ": Can't run fft");
             }
         }
 
-        public void Initialize(double[] data)
+        public double[] Spectrum(double[] input, bool scale, out double[] backwardResult)
         {
-            DFTI.DftiCreateDescriptor(
-                ref descriptor,
-                DFTI.DOUBLE,
-                DFTI.COMPLEX,
-                1,
-                data.Length);
-
-            DFTI.DftiSetValue(descriptor, DFTI.PLACEMENT, DFTI.NOT_INPLACE);
-            DFTI.DftiCommitDescriptor(descriptor);
-
-            input = new Complex[data.Length];
-            output = new Complex[data.Length];
-
-            for (int i = 0; i<data.Length; i++)
+            if (StretchInput)
             {
-                input[i] = new Complex(data[i], 0);
+                Helper.StretchToNextPowerOf2(ref input);
             }
-        }
 
-        public double[] Spectrum(double[] input, bool scale)
-        {
             IntPtr desc = new IntPtr();
             if (DFTI.DftiCreateDescriptor(
                 ref desc,
@@ -55,43 +70,29 @@ namespace FFTBench.Benchmark
                 1,
                 input.Length) != DFTI.NO_ERROR)
             {
-                return input;
+                throw new Exception(this + ": Can't initialize");
             }
 
-            DFTI.DftiSetValue(desc, DFTI.PLACEMENT, DFTI.NOT_INPLACE);
-            if(DFTI.DftiCommitDescriptor(desc) != DFTI.NO_ERROR)
+            if( DFTI.DftiSetValue(desc, DFTI.PLACEMENT, DFTI.NOT_INPLACE) != DFTI.NO_ERROR ||
+                DFTI.DftiCommitDescriptor(desc) != DFTI.NO_ERROR)
             {
-                throw new NotImplementedException(this + ": Can't initialize descriptor for spectrum.");
+                throw new Exception(this + ": Can't initialize descriptor for spectrum.");
             }
 
-            Complex[] data1 = new Complex[input.Length];
+            Helper.ToComplex(input, out Complex[] data1);
             Complex[] data2 = new Complex[input.Length];
-
-            for (int i = 0; i < input.Length; i++)
-            {
-                data1[i] = new Complex(input[i],0);
-            }
 
             if(DFTI.DftiComputeForward(desc, data1, data2) != DFTI.NO_ERROR)
             {
-                return input;
+                throw new Exception(this + ": Can't run fft");
             }
             
-            var spectrum = Helper.ComputeSpectrum(ToComplex(data2));
+            var spectrum = Helper.ComputeSpectrum(data2);
 
             DFTI.DftiComputeBackward(desc, data2, data1);
-            for (int i = 0; i < input.Length; i++)
-            {
-                input[i] = data1[i].Real;
-            }
+            backwardResult = Helper.ToReal(data1);
+            Helper.Scale(ref backwardResult, scale);
 
-            if (scale)
-            {
-                for (int i = 0; i < input.Length; i++)
-                {
-                    input[i] /= input.Length;
-                }
-            }
 
             DFTI.DftiFreeDescriptor(ref desc);
 
@@ -100,20 +101,14 @@ namespace FFTBench.Benchmark
 
         public override string ToString()
         {
-            return "MKL";
-        }
+            string name = "MKL";
 
-        public static double[] ToComplex(Complex[] data)
-        {
-            double[] complex = new double[data.Length << 1];
-
-            for (int i = 0; i < data.Length; i++)
+            if (StretchInput)
             {
-                complex[i * 2] = data[i].Real;
-                complex[(i * 2) + 1] = data[i].Imaginary;
+                name += "(stretched)";
             }
 
-            return complex;
+            return name;
         }
     }
 }

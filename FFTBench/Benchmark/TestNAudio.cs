@@ -6,38 +6,41 @@ namespace FFTBench.Benchmark
     public class TestNAudio : ITest
     {
         int size;
-
         Complex[] data;
 
         public bool Enabled { get; set; }
 
         public void Initialize(double[] data)
         {
-            int length = data.Length;
+            if (Helper.GetNextPowerOf2(data.Length) != data.Length)
+            {
+                throw new NotSupportedException(this + ": size is not a power of 2.");
+            }
 
             this.data = ToComplex(data);
 
-            size = Util.Log2(length);
+            size = Util.Log2(data.Length);
         }
 
         public void FFT(bool forward)
         {
-            NAudio.Dsp.FastFourierTransform.FFT(forward, size, data);
+            FastFourierTransform.FFT(forward, size, data);
         }
 
-        public double[] Spectrum(double[] input, bool scale)
+        public double[] Spectrum(double[] input, bool scale, out double[] backwardResult)
         {
-            var data = ToComplex(input);
+            if (Helper.GetNextPowerOf2(input.Length) != input.Length)
+            {
+                throw new NotSupportedException(this + ": size is not a power of 2.");
+            }
 
+            var data = ToComplex(input);
             int size = Util.Log2(input.Length);
 
-            NAudio.Dsp.FastFourierTransform.FFT(true, size, data);
-
+            FastFourierTransform.FFT(true, size, data);
             var spectrum = ComputeSpectrum(data);
-
-            NAudio.Dsp.FastFourierTransform.FFT(false, size, data);
-
-            ToDouble(data, input);
+            FastFourierTransform.FFT(false, size, data);
+            backwardResult = ToDouble(data);
 
             return spectrum;
         }
@@ -61,33 +64,30 @@ namespace FFTBench.Benchmark
 
         protected Complex[] ToComplex(double[] data)
         {
-            int length = data.Length;
+            var result = new Complex[data.Length];
 
-            var result = new Complex[length];
-
-            Complex z;
-
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < data.Length; i++)
             {
-                z = new Complex();
-
-                z.X = (float)data[i];
-                z.Y = 0f;
-
-                result[i] = z;
+                result[i] = new Complex
+                {
+                    X = (float)data[i],
+                    Y = 0f
+                };
             }
 
             return result;
         }
 
-        protected void ToDouble(Complex[] data, double[] target)
+        protected double[] ToDouble(Complex[] data)
         {
-            int length = data.Length;
+            var target = new double[data.Length];
 
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < data.Length; i++)
             {
                 target[i] = data[i].X;
             }
+
+            return target;
         }
 
         public override string ToString()

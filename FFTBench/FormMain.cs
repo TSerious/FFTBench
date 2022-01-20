@@ -76,17 +76,17 @@ namespace FFTBench
 
             btnRun.Image = Properties.Resources.stop;
 
-            int start = comboSize1.SelectedIndex + 7;
-            int end = comboSize2.SelectedIndex + 7;
-
-            int i = Math.Min(start, end);
-            int length = Math.Max(start, end);
+            List<int> testLengths = new List<int>();
+            for (int index = comboSize1.SelectedIndex; index <= comboSize2.SelectedIndex; index++)
+            {
+                testLengths.Add(int.Parse(comboSize1.Items[index].ToString()));
+            }
 
             int repeat = int.Parse(comboRepeat.SelectedItem.ToString());
 
             progressBar.Value = 0;
             progressBar.Minimum = 0;
-            progressBar.Maximum = tests.Count * (length - i);
+            progressBar.Maximum = tests.Count * testLengths.Count;
 
             cts = new CancellationTokenSource();
 
@@ -109,7 +109,7 @@ namespace FFTBench
 
             try
             {
-                var results = await RunBenchmark(i, length, repeat, tests, progress, cts.Token);
+                var results = await RunBenchmark(testLengths, repeat, tests, progress, cts.Token);
 
                 this.plot.Model = CreatePlotModel(results);
 
@@ -132,7 +132,7 @@ namespace FFTBench
             }
         }
 
-        private async Task<Dictionary<int, TestResult>> RunBenchmark(int start, int length,
+        private async Task<Dictionary<int, TestResult>> RunBenchmark(List<int> testLengths,
             int repeat, List<ITest> tests, IProgress<Tuple<int, string>> progress,
             CancellationToken cancellationToken)
         {
@@ -156,9 +156,9 @@ namespace FFTBench
 
                     progress.Report(new Tuple<int, string>(k, name));
 
-                    for (int i = start; i <= length; i++)
+                    for (int i = 0; i < testLengths.Count; i++)
                     {
-                        int size = Util.Pow(2, i);
+                        int size = testLengths[i];
 
                         var data = SignalGenerator.Sawtooth(size);
 
@@ -229,7 +229,11 @@ namespace FFTBench
                 categoryAxis.Labels.Add(size.ToString());
             }
 
-            var valueAxis = new LinearAxis { Position = AxisPosition.Left, MinimumPadding = 0, MaximumPadding = 0.06, AbsoluteMinimum = 0 };
+            var valueAxis = new LinearAxis { Position = AxisPosition.Left, MinimumPadding = 0, MaximumPadding = 0.06, AbsoluteMinimum = -1 };
+            valueAxis.ExtraGridlines = new double[] { 0 };
+            valueAxis.ExtraGridlineStyle = LineStyle.Solid;
+            valueAxis.ExtraGridlineThickness = 1;
+            valueAxis.ExtraGridlineColor = OxyColors.Red;
 
             foreach (var item in series.Values)
             {

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ProjectGuid>{3F9950C6-C039-4322-9590-EDED88AF1154}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <AssemblyTitle>FFTBench</AssemblyTitle>
     <Product>FFTBench</Product>
     <Copyright>Copyright ©  2016</Copyright>
@@ -19,18 +19,18 @@
     <PackageReference Include="FFTW.NET" Version="1.0.1" />
     <PackageReference Include="MathNet.Numerics" Version="4.15.0" />
     <PackageReference Include="MathNet.Numerics.MKL.Win-x64" Version="2.5.0" />
-    <PackageReference Include="Microsoft.NETCore.Platforms" Version="1.1.0" />
+    <PackageReference Include="Microsoft.NETCore.Platforms" Version="6.0.1" />
     <PackageReference Include="Microsoft.Win32.Primitives" Version="4.3.0" />
-    <PackageReference Include="NAudio" Version="1.8.4" />
-    <PackageReference Include="NETStandard.Library" Version="1.6.1" />
+    <PackageReference Include="NAudio" Version="2.0.1" />
+    <PackageReference Include="NETStandard.Library" Version="2.0.3" />
     <PackageReference Include="OxyPlot.Core" Version="1.0.0" />
     <PackageReference Include="OxyPlot.WindowsForms" Version="1.0.0" />
     <PackageReference Include="System.AppContext" Version="4.3.0" />
     <PackageReference Include="System.Collections" Version="4.3.0" />
     <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
-    <PackageReference Include="System.Console" Version="4.3.0" />
+    <PackageReference Include="System.Console" Version="4.3.1" />
     <PackageReference Include="System.Diagnostics.Debug" Version="4.3.0" />
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="4.3.0" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="6.0.0" />
     <PackageReference Include="System.Diagnostics.Tools" Version="4.3.0" />
     <PackageReference Include="System.Diagnostics.Tracing" Version="4.3.0" />
     <PackageReference Include="System.Globalization" Version="4.3.0" />
@@ -51,7 +51,7 @@
     <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
     <PackageReference Include="System.Reflection.Primitives" Version="4.3.0" />
     <PackageReference Include="System.Resources.ResourceManager" Version="4.3.0" />
-    <PackageReference Include="System.Runtime" Version="4.3.0" />
+    <PackageReference Include="System.Runtime" Version="4.3.1" />
     <PackageReference Include="System.Runtime.Extensions" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Handles" Version="4.3.0" />
     <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />

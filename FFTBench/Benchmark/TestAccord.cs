@@ -14,24 +14,32 @@ namespace FFTBench.Benchmark
                 FourierTransform.Direction.Backward);
         }
 
-        public override double[] Spectrum(double[] input, bool scale)
+        public override double[] Spectrum(double[] input, bool scale, out double[] backwardResult)
         {
-            var data = ToComplex(input);
+            if (StretchInput)
+            {
+                Helper.StretchToNextPowerOf2(ref input);
+            }
 
+            Helper.ToComplex(input, out data);
             FourierTransform2.FFT(data, FourierTransform.Direction.Forward);
-
-            var spectrum = ComputeSpectrum(data);
-
+            var spectrum = Helper.ComputeSpectrum(data);
             FourierTransform2.FFT(data, FourierTransform.Direction.Backward);
-
-            ToDouble(data, input);
+            backwardResult = Helper.ToReal(data);
 
             return spectrum;
         }
 
         public override string ToString()
         {
-            return "Accord";
+            string name = "Accord";
+
+            if (StretchInput)
+            {
+                name += "(stretched)";
+            }
+
+            return name;
         }
     }
 }

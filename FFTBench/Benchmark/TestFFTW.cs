@@ -1,5 +1,6 @@
 ﻿using FFTW.NET;
 using System.Numerics;
+using System;
 
 namespace FFTBench.Benchmark
 {
@@ -11,18 +12,18 @@ namespace FFTBench.Benchmark
 
         public bool Enabled { get; set; }
 
+        public bool StretchInput { get; set; }
+
         public void Initialize(double[] data)
         {
-            int length = data.Length >> 1;
-
-            input = new FftwArrayComplex(length);
-            output = new FftwArrayComplex(length);
-
-            for (int i = 0; i < length; i++)
+            if (StretchInput)
             {
-                input[i] = new Complex(data[i * 2], data[(i * 2) + 1]);
+                Helper.StretchToNextPowerOf2(ref data);
             }
 
+            input = new FftwArrayComplex(data.Length);
+            output = new FftwArrayComplex(data.Length);
+            Fill(data, ref input);
             plan = FftwPlanC2C.Create(input, output, DftDirection.Forwards);
         }
 
@@ -31,42 +32,25 @@ namespace FFTBench.Benchmark
             plan.Execute();
         }
 
-        public double[] Spectrum(double[] input, bool scale)
+        public double[] Spectrum(double[] input, bool scale, out double[] backwardResult)
         {
-            using (var data1 = new FftwArrayComplex(input.Length))
-            using (var data2 = new FftwArrayComplex(input.Length))
-            using (var plan1 = FftwPlanC2C.Create(data1, data2, DftDirection.Forwards, PlannerFlags.Estimate ))
-            using (var plan2 = FftwPlanC2C.Create(data2, data1, DftDirection.Backwards, PlannerFlags.Estimate))
+            if (StretchInput)
             {
-                for (int i = 0; i < input.Length; i++)
-                {
-                    data1[i] = new Complex(input[i], 0.0);
-                }
+                Helper.StretchToNextPowerOf2(ref input);
+            }
 
+            var data1 = new FftwArrayComplex(input.Length);
+            var data2 = new FftwArrayComplex(input.Length);
+
+            using (var plan1 = FftwPlanC2C.Create(data1, data2, DftDirection.Forwards, PlannerFlags.Estimate ))
+            using (var plan2 = FftwPlanC2C.Create(data2, data1, DftDirection.Backwards, PlannerFlags.Estimate ))
+            {
+                Fill(input, ref data1);
                 plan1.Execute();
-
-                float[] temp = new float[input.Length << 1];
-                for(int i = 0; i < input.Length; i++)
-                {
-                    temp[(i * 2)] = (float)data2[i].Real;
-                    temp[(i * 2) + 1] = (float)data2[i].Imaginary;
-                }
-                var spectrum = Helper.ComputeSpectrum(temp);
-
+                var spectrum = ComputeSpectrum(data2);
                 plan2.Execute();
-
-                for(int i = 0; i < data1.Length; i++)
-                {
-                    input[i] = data1[i].Real;
-                }
-
-                if (scale)
-                {
-                    for (int i = 0; i < input.Length; i++)
-                    {
-                        input[i] /= input.Length;
-                    }
-                }
+                backwardResult = ToReal(data1);
+                Helper.Scale(ref backwardResult, scale);
 
                 return spectrum;
             }
@@ -74,7 +58,51 @@ namespace FFTBench.Benchmark
 
         public override string ToString()
         {
-            return "FFTW";
+            string name = "FFTW";
+
+            if (StretchInput)
+            {
+                name += "(stretched)";
+            }
+
+            return name;
+        }
+
+        public static void Fill(double[] realData, ref FftwArrayComplex data)
+        {
+            if (data.Length != realData.Length)
+            {
+                throw new NotImplementedException("FFTW: Can't fill arrays of different size.");
+            }
+
+            for (int i = 0; i < realData.Length; i++)
+            {
+                data[i] = new Complex(realData[i], 0.0);
+            }
+        }
+
+        public static double[] ComputeSpectrum(FftwArrayComplex fft)
+        {
+            var result = new double[fft.Length];
+
+            for (int i = 0; i < fft.Length; i++)
+            {
+                result[i] = fft[i].Magnitude;
+            }
+
+            return result;
+        }
+
+        public static double[] ToReal(FftwArrayComplex data)
+        {
+            double[] target = new double[data.Length];
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                target[i] = data[i].Real;
+            }
+
+            return target;
         }
     }
 }

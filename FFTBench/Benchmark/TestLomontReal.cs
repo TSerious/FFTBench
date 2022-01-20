@@ -6,8 +6,6 @@ namespace FFTBench.Benchmark
 {
     public class TestLomontReal : ITest
     {
-        int size;
-
         double[] data;
         double[] copy;
 
@@ -15,32 +13,48 @@ namespace FFTBench.Benchmark
 
         public bool Enabled { get; set; }
 
+        public bool StretchInput { get; set; }
+
         public void Initialize(double[] data)
         {
-            int length = data.Length;
+            if (StretchInput)
+            {
+                Helper.StretchToNextPowerOf2(ref data);
+            }
 
-            this.copy = (double[])data.Clone();
-            this.data = new double[length];
+            this.data = (double[])data.Clone();
+            this.copy = new double[data.Length];
 
-            size = Util.Log2(length);
+            if (Helper.GetNextPowerOf2(data.Length) != data.Length)
+            {
+                throw new NotImplementedException(this + ": Size must be a power of 2.");
+            }
         }
 
         public void FFT(bool forward)
         {
             data.CopyTo(copy, 0);
-
             fft.RealFFT(copy, forward);
         }
 
-        public double[] Spectrum(double[] input, bool scale)
+        public double[] Spectrum(double[] input, bool scale, out double[] backwardResult)
         {
+            if (StretchInput)
+            {
+                Helper.StretchToNextPowerOf2(ref input);
+            }
+
+            if (Helper.GetNextPowerOf2(input.Length) != input.Length)
+            {
+                throw new NotImplementedException(this + ": Size must be a power of 2.");
+            }
+
             var fft = new LomontFFT();
-
             fft.RealFFT(input, true);
-
             var spectrum = ComputeSpectrum(input);
-
             fft.RealFFT(input, false);
+            backwardResult = Helper.ToReal(input);
+            Helper.Scale(ref backwardResult, scale);
 
             return spectrum;
         }
@@ -64,7 +78,14 @@ namespace FFTBench.Benchmark
 
         public override string ToString()
         {
-            return "Lomont (real)";
+            string name = "Lomont (real)";
+
+            if (StretchInput)
+            {
+                name += "(stretched)";
+            }
+
+            return name;
         }
     }
 }

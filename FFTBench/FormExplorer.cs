@@ -55,6 +55,7 @@ namespace FFTBench
             {
                 comboSize.Items.Add(Util.Pow(2, i));
             }
+            comboSize.Items.Add(200);
 
             comboFFTs.SelectedIndex = 0;
             comboSignals.SelectedIndex = 0;
@@ -95,17 +96,21 @@ namespace FFTBench
             try
             {
                 var fft = comboFFTs.SelectedItem as ITest;
-
                 var generator = signals[comboSignals.SelectedItem.ToString()];
-
                 var signal = generator((int)comboSize.SelectedItem);
 
                 plot1.Model = PlotSignal(signal); // Input signal.
-                plot2.Model = PlotSpectrum(fft.Spectrum(signal, false));
-                plot3.Model = PlotSignal(signal); // Inverse FFT.
+                plot2.Model = PlotSpectrum(fft.Spectrum(signal, false, out double[] restoredSignal));
+                plot3.Model = PlotSignal(restoredSignal); // Inverse FFT.
             }
             catch (Exception e)
             {
+                plot1.Model.Series.Clear();
+                plot1.Model.InvalidatePlot(true);
+                plot2.Model.Series.Clear();
+                plot2.Model.InvalidatePlot(true);
+                plot3.Model.Series.Clear();
+                plot3.Model.InvalidatePlot(true);
                 MessageBox.Show(e.Message);
             }
         }
@@ -120,12 +125,7 @@ namespace FFTBench
             };
 
             var ls = new LineSeries();
-
-            //ls.Title = "";
-
-            int length = signal.Length;
-
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < signal.Length; i++)
             {
                 ls.Points.Add(new DataPoint(i, signal[i]));
             }
@@ -159,12 +159,7 @@ namespace FFTBench
             };
 
             var ls = new LineSeries();
-
-            //ls.Title = "";
-
-            int length = spectrum.Length;
-
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < spectrum.Length; i++)
             {
                 ls.Points.Add(new DataPoint(i, spectrum[i]));
             }

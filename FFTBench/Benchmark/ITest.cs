@@ -18,6 +18,6 @@ namespace FFTBench.Benchmark
         void FFT(bool forward);
 
         // Ignore for benchmark (used only for 'FFT Explorer')
-        double[] Spectrum(double[] input, bool scale);
+        double[] Spectrum(double[] input, bool scale, out double[] backwardResult);
     }
 }

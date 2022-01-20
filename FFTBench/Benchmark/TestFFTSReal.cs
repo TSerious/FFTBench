@@ -10,13 +10,19 @@ namespace FFTBench.Benchmark
 
         public bool Enabled { get; set; }
 
+        public bool StretchInput { get; set; }
+
         public void Initialize(double[] data)
         {
             FFTSManager.LoadAppropriateDll(FFTSManager.InstructionType.Auto);
 
-            plan = FFTS.Real(FFTS.Forward, data.Length);
+            if (StretchInput)
+            {
+                Helper.StretchToNextPowerOf2(ref data);
+            }
 
-            input = ToFloat(data);
+            plan = FFTS.Real(FFTS.Forward, data.Length);
+            input = Helper.ConvertToFloat(data);
             output = new float[plan.outSize];
         }
 
@@ -25,40 +31,26 @@ namespace FFTBench.Benchmark
             plan.Execute(input, output);
         }
 
-        public double[] Spectrum(double[] input, bool scale)
+        public double[] Spectrum(double[] input, bool scale, out double[] backwardResult)
         {
             FFTSManager.LoadAppropriateDll(FFTSManager.InstructionType.Auto);
+
+            if (StretchInput)
+            {
+                Helper.StretchToNextPowerOf2(ref input);
+            }
 
             using (var plan1 = FFTS.Real(FFTS.Forward, input.Length))
             using (var plan2 = FFTS.Real(FFTS.Backward, input.Length))
             {
-                
-                var data1 = ToFloat(input);
+                var data1 = Helper.ConvertToFloat(input);
                 var data2 = new float[plan1.outSize];
 
                 plan1.Execute(data1, data2);
-
-                float[] temp = new float[input.Length << 1];
-                for (int i = 0; i < data2.Length; i++)
-                {
-                    temp[i] = (float)data2[i];
-                }
-                var spectrum = Helper.ComputeSpectrum(temp);
-
+                var spectrum = Helper.ComputeSpectrum(data2);
                 plan2.Execute(data2, data1);
-
-                for (int i = 0; i < input.Length; i++)
-                {
-                    input[i] = data1[i];
-                }
-
-                if (scale)
-                {
-                    for (int i = 0; i < input.Length; i++)
-                    {
-                        input[i] /= input.Length;
-                    }
-                }
+                backwardResult = Helper.ConvertToDouble(Helper.ToReal(data1));
+                Helper.Scale(ref backwardResult, scale);
                 
                 return spectrum;
             }
@@ -66,19 +58,14 @@ namespace FFTBench.Benchmark
 
         public override string ToString()
         {
-            return "FFTS (real)";
-        }
+            string name = "FFTS_32(real)";
 
-        private float[] ToFloat(double[] data)
-        {
-            float[] f = new float[data.Length];
-
-            for (int i = 0; i < data.Length; i++)
+            if (StretchInput)
             {
-                f[i] = (float)data[i];
+                name += "(stretched)";
             }
 
-            return f;
+            return name;
         }
     }
 }

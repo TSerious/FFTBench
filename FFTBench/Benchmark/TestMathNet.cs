@@ -11,7 +11,6 @@ namespace FFTBench.Benchmark
     {
         public override void FFT(bool forward)
         {
-            //Control.UseNativeMKL();
             data.CopyTo(copy, 0);
 
             if (forward)
@@ -24,24 +23,33 @@ namespace FFTBench.Benchmark
             }
         }
 
-        public override double[] Spectrum(double[] input, bool scale)
+        public override double[] Spectrum(double[] input, bool scale, out double[] backwardResult)
         {
-            var data = ToComplex(input);
+            if (StretchInput)
+            {
+                Helper.StretchToNextPowerOf2(ref input);
+            }
 
-            Fourier.Radix2Forward(data, FourierOptions.Default);
-
-            var spectrum = ComputeSpectrum(data);
-
-            Fourier.Radix2Inverse(data, FourierOptions.Default);
-
-            ToDouble(data, input);
+            Helper.ToComplex(input, out Complex[] data);
+            Fourier.Forward(data, FourierOptions.Default);
+            var spectrum = Helper.ComputeSpectrum(data);
+            Fourier.Inverse(data, FourierOptions.Default);
+            backwardResult = Helper.ToReal(data);
+            Helper.Scale(ref backwardResult, scale);
 
             return spectrum;
         }
 
         public override string ToString()
         {
-            return "Math.NET";
+            string name = "Math.NET";
+
+            if (StretchInput)
+            {
+                name += "(stretched)";
+            }
+
+            return name;
         }
     }
 }

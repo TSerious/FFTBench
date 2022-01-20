@@ -23,65 +23,91 @@ namespace FFTBench.Benchmark
 
         public void Initialize(double[] data)
         {
-            DFTI.DftiCreateDescriptor(
+            int res = DFTI.DftiCreateDescriptor(
                 ref descriptor,
                 DFTI.SINGLE,
                 DFTI.REAL,
                 1,
                 data.Length);
-
-            DFTI.DftiSetValue(descriptor, DFTI.PLACEMENT, DFTI.NOT_INPLACE);
-            DFTI.DftiSetValue(descriptor, DFTI.PACKED_FORMAT, DFTI.PACK_FORMAT);
-            DFTI.DftiCommitDescriptor(descriptor);
-
-            input = new float[data.Length];
-            output = new float[data.Length];
-
-            for (int i = 0; i<data.Length; i++)
+            if (res != DFTI.NO_ERROR)
             {
-                input[i] = (float)data[i];
+                throw new Exception(this + ": Can't initialize");
             }
+
+            res = DFTI.DftiSetValue(descriptor, DFTI.PLACEMENT, DFTI.NOT_INPLACE);
+            if (res != DFTI.NO_ERROR)
+            {
+                throw new Exception(this + ": Can't initialize");
+            }
+
+            res = DFTI.DftiSetValue(descriptor, DFTI.PACKED_FORMAT, DFTI.PACK_FORMAT);
+            if (res != DFTI.NO_ERROR)
+            {
+                throw new Exception(this + ": Can't initialize");
+            }
+
+            res = DFTI.DftiCommitDescriptor(descriptor);
+            if (res != DFTI.NO_ERROR)
+            {
+                throw new Exception(this + ": Can't initialize");
+            }
+
+            input = Helper.ConvertToFloat(data);
+            output = new float[data.Length];
         }
 
-        public double[] Spectrum(double[] input, bool scale)
+        public double[] Spectrum(double[] input, bool scale, out double[] backwardResult)
         {
             IntPtr desc = new IntPtr();
-            DFTI.DftiCreateDescriptor(
+            int res = DFTI.DftiCreateDescriptor(
                 ref desc,
                 DFTI.SINGLE,
                 DFTI.REAL,
                 1,
                 input.Length);
+            if (res != DFTI.NO_ERROR)
+            {
+                throw new Exception(this + ": Can't initialize");
+            }
 
-            DFTI.DftiSetValue(desc, DFTI.PLACEMENT, DFTI.NOT_INPLACE);
-            DFTI.DftiSetValue(desc, DFTI.PACKED_FORMAT, DFTI.PACK_FORMAT);
-            DFTI.DftiCommitDescriptor(desc);
+            res = DFTI.DftiSetValue(desc, DFTI.PLACEMENT, DFTI.NOT_INPLACE);
+            if (res != DFTI.NO_ERROR)
+            {
+                throw new Exception(this + ": Can't initialize");
+            }
 
-            float[] data1 = new float[input.Length];
+            res = DFTI.DftiSetValue(desc, DFTI.PACKED_FORMAT, DFTI.PACK_FORMAT);
+            if (res != DFTI.NO_ERROR)
+            {
+                throw new Exception(this + ": Can't initialize");
+            }
+
+            res = DFTI.DftiCommitDescriptor(desc);
+            if (res != DFTI.NO_ERROR)
+            {
+                throw new Exception(this + ": Can't initialize");
+            }
+
+            float[] data1 = Helper.ConvertToFloat(input);
             float[] data2 = new float[input.Length];
 
-            for (int i = 0; i < input.Length; i++)
+            res = DFTI.DftiComputeForward(desc, data1, data2);
+            if (res != DFTI.NO_ERROR)
             {
-                data1[i] = (float)input[i];
+                throw new Exception(this + ": Can't compute fft.");
             }
 
-            DFTI.DftiComputeForward(desc, data1, data2);
             var result = mkl.Util.PackedRealToComplex(data2);
-            var spectrum = Helper.ComputeSpectrum(ToComplex(result));
+            var spectrum = Helper.ComputeSpectrum(result);
 
-            DFTI.DftiComputeBackward(desc, data2, data1);
-            for (int i = 0; i < input.Length; i++)
+            res = DFTI.DftiComputeBackward(desc, data2, data1);
+            if (res != DFTI.NO_ERROR)
             {
-                input[i] = data1[i];
+                throw new Exception(this + ": Can't compute inverse fft.");
             }
 
-            if (scale)
-            {
-                for (int i = 0; i < input.Length; i++)
-                {
-                    input[i] /= input.Length;
-                }
-            }
+            backwardResult = Helper.ConvertToDouble(data1);
+            Helper.Scale(ref backwardResult, scale);
 
             DFTI.DftiFreeDescriptor(ref desc);
 

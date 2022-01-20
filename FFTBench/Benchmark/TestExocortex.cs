@@ -14,24 +14,28 @@ namespace FFTBench.Benchmark
                 FourierDirection.Backward);
         }
 
-        public override double[] Spectrum(double[] input, bool scale)
+        public override double[] Spectrum(double[] input, bool scale, out double[] backwardResult)
         {
-            var data = ToComplex(input);
+            Helper.ToComplex(input, out data);
 
             Fourier.FFT(data, data.Length, FourierDirection.Forward);
-
-            var spectrum = ComputeSpectrum(data);
-
+            var spectrum = Helper.ComputeSpectrum(data);
             Fourier.FFT(data, data.Length, FourierDirection.Backward);
-
-            ToDouble(data, input);
+            backwardResult = Helper.ToReal(data);
 
             return spectrum;
         }
 
         public override string ToString()
         {
-            return "Exocortex";
+            string name = "Exocortex";
+
+            if (StretchInput)
+            {
+                name += "(stretched)";
+            }
+
+            return name;
         }
     }
 }

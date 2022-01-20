@@ -21,6 +21,7 @@ namespace FFTBench
             tests.Add(new TestExocortexReal32() { Enabled = true });
             tests.Add(new TestLomontReal() { Enabled = true });
             tests.Add(new TestFFTS() { Enabled = true });
+            tests.Add(new TestFFTS() { Enabled = true, StretchInput = true });
             tests.Add(new TestFFTSReal() { Enabled = true });
             tests.Add(new TestFFTW() { Enabled = true });
             tests.Add(new TestFFTWReal() { Enabled = true });

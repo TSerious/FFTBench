@@ -15,13 +15,23 @@ namespace FFTBench.Benchmark
         public BenchmarkResult Run(ITest test, double[] data, int repeat)
         {
             var timer = new Stopwatch();
-
-            test.Initialize(data);
-
-            // Warmup.
-            test.FFT(true);
-
             var result = new BenchmarkResult(data.Length);
+
+            try
+            {
+                test.Initialize(data);
+                // Warmup.
+                test.FFT(true);
+            }
+            catch(Exception)
+            {
+                result.Minimum =
+                result.Maximum =
+                result.Total = -1;
+                result.Average = -1;
+
+                return result;
+            }
 
             for (int i = 0; i < repeat; i++)
             {

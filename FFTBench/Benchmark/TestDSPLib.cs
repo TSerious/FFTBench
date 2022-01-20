@@ -14,14 +14,19 @@ namespace FFTBench.Benchmark
 
         public bool Enabled { get; set; }
 
+        public bool StretchInput { get; set; }
+
         public void Initialize(double[] data)
         {
-            int length = data.Length;
+            if (StretchInput)
+            {
+                Helper.StretchToNextPowerOf2(ref data);
+            }
 
             this.copy = (double[])data.Clone();
-            this.data = new double[length];
+            this.data = new double[data.Length];
 
-            fft.Initialize((uint)length);
+            fft.Initialize((uint)data.Length);
         }
 
         public void FFT(bool forward)
@@ -33,22 +38,32 @@ namespace FFTBench.Benchmark
             dummy = result.Length;
         }
 
-        public double[] Spectrum(double[] input, bool scale)
+        public double[] Spectrum(double[] input, bool scale, out double[] backwardResult)
         {
+            if (StretchInput)
+            {
+                Helper.StretchToNextPowerOf2(ref input);
+            }
+
             var fft = new FFT();
-
             fft.Initialize((uint)input.Length);
-
             var result = fft.Execute(input);
-
             var spectrum = DSP.ConvertComplex.ToMagnitude(result);
+            backwardResult = new double[input.Length];
 
             return spectrum;
         }
 
         public override string ToString()
         {
-            return "DSPLib";
+            string name = "DSPLib";
+
+            if (StretchInput)
+            {
+                name += "(stretched)";
+            }
+
+            return name;
         }
     }
 }
