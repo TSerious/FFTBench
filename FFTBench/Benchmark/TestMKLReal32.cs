@@ -1,10 +1,6 @@
-﻿using mkl;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+using oneMKL.FFT.NET;
 
 namespace FFTBench.Benchmark
 {
@@ -27,8 +23,8 @@ namespace FFTBench.Benchmark
 
             int res = DFTI.DftiCreateDescriptor(
                 ref descriptor,
-                DFTI.SINGLE,
-                DFTI.REAL,
+                DFTI.CONFIG_VALUE.SINGLE,
+                DFTI.CONFIG_VALUE.REAL,
                 1,
                 data.Length);
             if (res != DFTI.NO_ERROR)
@@ -36,13 +32,13 @@ namespace FFTBench.Benchmark
                 throw new Exception(this + ": Can't initialize");
             }
 
-            res = DFTI.DftiSetValue(descriptor, DFTI.PLACEMENT, DFTI.NOT_INPLACE);
+            res = DFTI.DftiSetValue(descriptor, DFTI.CONFIG_PARAM.PLACEMENT, DFTI.CONFIG_VALUE.NOT_INPLACE);
             if (res != DFTI.NO_ERROR)
             {
                 throw new Exception(this + ": Can't initialize");
             }
 
-            res = DFTI.DftiSetValue(descriptor, DFTI.PACKED_FORMAT, DFTI.PACK_FORMAT);
+            res = DFTI.DftiSetValue(descriptor, DFTI.CONFIG_PARAM.PACKED_FORMAT, DFTI.CONFIG_VALUE.PACK_FORMAT);
             if (res != DFTI.NO_ERROR)
             {
                 throw new Exception(this + ": Can't initialize");
@@ -76,8 +72,8 @@ namespace FFTBench.Benchmark
             IntPtr desc = new IntPtr();
             int res = DFTI.DftiCreateDescriptor(
                 ref desc,
-                DFTI.SINGLE,
-                DFTI.REAL,
+                DFTI.CONFIG_VALUE.SINGLE,
+                DFTI.CONFIG_VALUE.REAL,
                 1,
                 input.Length);
             if (res != DFTI.NO_ERROR)
@@ -85,13 +81,13 @@ namespace FFTBench.Benchmark
                 throw new Exception(this + ": Can't initialize");
             }
 
-            res = DFTI.DftiSetValue(desc, DFTI.PLACEMENT, DFTI.NOT_INPLACE);
+            res = DFTI.DftiSetValue(desc, DFTI.CONFIG_PARAM.PLACEMENT, DFTI.CONFIG_VALUE.NOT_INPLACE);
             if (res != DFTI.NO_ERROR)
             {
                 throw new Exception(this + ": Can't initialize");
             }
 
-            res = DFTI.DftiSetValue(desc, DFTI.PACKED_FORMAT, DFTI.PACK_FORMAT);
+            res = DFTI.DftiSetValue(desc, DFTI.CONFIG_PARAM.PACKED_FORMAT, DFTI.CONFIG_VALUE.PACK_FORMAT);
             if (res != DFTI.NO_ERROR)
             {
                 throw new Exception(this + ": Can't initialize");
@@ -112,7 +108,7 @@ namespace FFTBench.Benchmark
                 throw new Exception(this + ": Can't compute fft.");
             }
 
-            var result = mkl.Util.PackedRealToComplex(data2);
+            var result = Utils.PackedRealToComplex(data2);
             var spectrum = Helper.ComputeSpectrum(result);
 
             res = DFTI.DftiComputeBackward(desc, data2, data1);

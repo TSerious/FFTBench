@@ -2,3 +2,7 @@
 	path = oneMKL.FFT.NET
 	url = https://github.com/TSerious/oneMKL.FFT.NET.git
 	branch = main
+[submodule "FFTSSharp"]
+	path = FFTSSharp
+	url = https://github.com/PetterPet01/FFTSSharp.git
+	branch = main

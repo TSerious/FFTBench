@@ -1,5 +1,4 @@
 ﻿using PetterPet.FFTSSharp;
-using System;
 
 namespace FFTBench.Benchmark
 {

@@ -136,6 +136,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Exocortex.DSP\Exocortex.DSP.csproj" />
     <ProjectReference Include="..\FFTSSharp\FFTSSharp.csproj" />
+    <ProjectReference Include="..\FFTSSharp\FFTSSharp\FFTSSharp.csproj" />
     <ProjectReference Include="..\MKL\MKL.csproj" />
     <ProjectReference Include="..\oneMKL.FFT.NET\oneMKL.FFT.NET\oneMKL.FFT.NET.csproj" />
   </ItemGroup>
@@ -143,6 +144,6 @@
     <None Include="Resources\save.png" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="if not exist $(TargetDir)ffts-dlls mkdir $(TargetDir)ffts-dlls&#xD;&#xA;xcopy &quot;$(SolutionDir)FFTSSharp\ffts-dlls&quot; &quot;$(TargetDir)ffts-dlls&quot; /Y /I&#xD;&#xA;xcopy &quot;$(SolutionDir)oneMKL.FFT.NET\oneMKL.FFT.NET\dlls&quot; &quot;$(TargetDir)&quot; /Y /I" />
+    <Exec Command="if not exist $(TargetDir)ffts-dlls mkdir $(TargetDir)ffts-dlls&#xD;&#xA;xcopy &quot;$(SolutionDir)FFTSSharp\FFTSSharp\ffts-dlls&quot; &quot;$(TargetDir)ffts-dlls&quot; /Y /I&#xD;&#xA;xcopy &quot;$(SolutionDir)oneMKL.FFT.NET\oneMKL.FFT.NET\dlls&quot; &quot;$(TargetDir)&quot; /Y /I" />
   </Target>
 </Project>
