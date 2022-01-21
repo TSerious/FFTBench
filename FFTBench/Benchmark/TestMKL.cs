@@ -1,10 +1,6 @@
-﻿using mkl;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+using oneMKL.FFT.NET;
 
 namespace FFTBench.Benchmark
 {
@@ -25,13 +21,13 @@ namespace FFTBench.Benchmark
                 Helper.StretchToNextPowerOf2(ref data);
             }
 
-            int res = DFTI.DftiCreateDescriptor(ref descriptor, DFTI.DOUBLE, DFTI.COMPLEX, 1, data.Length);
+            int res = DFTI.DftiCreateDescriptor(ref descriptor, DFTI.CONFIG_VALUE.DOUBLE, DFTI.CONFIG_VALUE.COMPLEX, 1, data.Length);
             if (res != DFTI.NO_ERROR)
             {
                 throw new Exception(this + ": Can't initialize");
             }
 
-            res = DFTI.DftiSetValue(descriptor, DFTI.PLACEMENT, DFTI.NOT_INPLACE);
+            res = DFTI.DftiSetValue(descriptor, DFTI.CONFIG_PARAM.PLACEMENT, DFTI.CONFIG_VALUE.NOT_INPLACE);
             if (res != DFTI.NO_ERROR)
             {
                 throw new Exception(this + ": Can't initialize");
@@ -65,15 +61,15 @@ namespace FFTBench.Benchmark
             IntPtr desc = new IntPtr();
             if (DFTI.DftiCreateDescriptor(
                 ref desc,
-                DFTI.DOUBLE,
-                DFTI.COMPLEX,
+                DFTI.CONFIG_VALUE.DOUBLE,
+                DFTI.CONFIG_VALUE.COMPLEX,
                 1,
                 input.Length) != DFTI.NO_ERROR)
             {
                 throw new Exception(this + ": Can't initialize");
             }
 
-            if( DFTI.DftiSetValue(desc, DFTI.PLACEMENT, DFTI.NOT_INPLACE) != DFTI.NO_ERROR ||
+            if( DFTI.DftiSetValue(desc, DFTI.CONFIG_PARAM.PLACEMENT, DFTI.CONFIG_VALUE.NOT_INPLACE) != DFTI.NO_ERROR ||
                 DFTI.DftiCommitDescriptor(desc) != DFTI.NO_ERROR)
             {
                 throw new Exception(this + ": Can't initialize descriptor for spectrum.");

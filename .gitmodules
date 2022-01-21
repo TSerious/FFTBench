@@ -1,0 +1,4 @@
+[submodule "oneMKL.FFT.NET"]
+	path = oneMKL.FFT.NET
+	url = https://github.com/TSerious/oneMKL.FFT.NET.git
+	branch = main
