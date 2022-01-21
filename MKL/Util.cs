@@ -72,5 +72,17 @@ namespace mkl
 
             return complex;
         }
+
+        public static Complex[] ToComplex(double[] data)
+        {
+            Complex[] result = new Complex[data.Length];
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                result[i] = new Complex(data[i], 0.0);
+            }
+
+            return result;
+        }
     }
 }
