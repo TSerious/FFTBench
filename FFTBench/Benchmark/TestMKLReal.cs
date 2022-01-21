@@ -25,11 +25,6 @@ namespace FFTBench.Benchmark
                 Helper.StretchToNextPowerOf2(ref data);
             }
 
-            if (Helper.GetNextPowerOf2(data.Length) != data.Length)
-            {
-                throw new NotSupportedException(this + "Size must be a power of 2");
-            }
-
             int res = DFTI.DftiCreateDescriptor(
                 ref descriptor,
                 DFTI.DOUBLE,
