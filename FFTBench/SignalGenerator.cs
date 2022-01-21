@@ -2,6 +2,7 @@
 namespace FFTBench
 {
     using MathNet.Numerics;
+    using System;
 
     class SignalGenerator
     {
@@ -62,6 +63,20 @@ namespace FFTBench
             const int N = 32;
 
             return Generate.Triangle(size, N, N, -20.0, 20.0);
+        }
+
+        public static double[] Bump(int size = 1024)
+        {
+            double[] data = new double[size];
+            int start = size >> 2;
+            double step = Math.PI / (size >> 1);
+
+            for (int i = 0; i < (size >> 1); i++)
+            {
+                data[i+start] = Math.Sin(step * i);
+            }
+
+            return data;
         }
 
         private static double[] ApplyWindow(double[] signal)
