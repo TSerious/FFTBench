@@ -3,6 +3,7 @@ namespace FFTBench
 {
     using MathNet.Numerics;
     using System;
+    using System.Numerics;
 
     class SignalGenerator
     {
@@ -77,6 +78,41 @@ namespace FFTBench
             }
 
             return data;
+        }
+
+        public static double[] TestArray(int size)
+        {
+            double[] result = new double[16];
+            double step = Math.PI / 16;
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = Math.Sin(step * i);
+            }
+
+            return result;
+        }
+
+        public static Complex[] TestArrayFFTresult()
+        {
+            return new Complex[]
+            {
+                new Complex(10.15317038760886 , 0),
+                new Complex(-3.42830608933527 , 2.220446049250313e-16),
+                new Complex(-0.7128448985744655 , 3.0531133177191805e-16),
+                new Complex(-0.3261824431007063 , 4.440892098500626e-16),
+                new Complex(-0.19891236737965823 , 0),
+                new Complex(-0.14308382743893477 , 4.440892098500626e-16),
+                new Complex(-0.11558222617172476 , 3.0531133177191805e-16),
+                new Complex(-0.1024276401250892 , 2.220446049250313e-16),
+                new Complex(-0.09849140335716466 , 0),
+                new Complex(-0.1024276401250892 , 2.220446049250313e-16),
+                new Complex(-0.11558222617172476 , 3.0531133177191805e-16),
+                new Complex(-0.14308382743893477 , 4.440892098500626e-16),
+                new Complex(-0.19891236737965823 , 0),
+                new Complex(-0.3261824431007063 , 4.440892098500626e-16),
+                new Complex(-0.7128448985744655 , 3.0531133177191805e-16),
+                new Complex(-3.42830608933527 , 2.220446049250313e-16)
+            };
         }
 
         private static double[] ApplyWindow(double[] signal)

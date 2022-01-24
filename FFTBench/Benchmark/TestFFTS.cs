@@ -1,4 +1,5 @@
 ﻿using PetterPet.FFTSSharp;
+using System.Numerics;
 
 namespace FFTBench.Benchmark
 {
@@ -48,6 +49,8 @@ namespace FFTBench.Benchmark
                 var data2 = new float[plan1.outSize];
 
                 plan1.Execute(data1, data2);
+                Helper.ComplexToComplex(Helper.ConvertToDouble(data2), out Complex[] res);
+                System.Diagnostics.Debug.WriteLine(this + " Error = " + Helper.CalculateError(res, SignalGenerator.TestArrayFFTresult()));
                 var spectrum = Helper.ComputeSpectrum(data2);
                 plan2.Execute(data2, data1);
                 backwardResult = Helper.ConvertToDouble(Helper.ToReal(data1));

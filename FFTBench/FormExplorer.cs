@@ -46,6 +46,7 @@ namespace FFTBench
             signals["Triangle"] = SignalGenerator.Triangle;
             signals["Sawtooth"] = SignalGenerator.Sawtooth;
             signals["Bump"] = SignalGenerator.Bump;
+            signals["Test"] = SignalGenerator.TestArray;
 
             foreach (var item in signals)
             {

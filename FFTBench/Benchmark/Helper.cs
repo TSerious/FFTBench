@@ -96,6 +96,18 @@ namespace FFTBench.Benchmark
             }
         }
 
+        public static void ComplexToComplex(double[] data, out Complex[] result)
+        {
+            result = new Complex[data.Length>>1];
+
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = new Complex(
+                    data[i<<1],
+                    data[(i<<1)+1]);
+            }
+        }
+
         public static double[] ToComplex(Complex[] data)
         {
             var result = new double[data.Length << 1];
@@ -271,6 +283,31 @@ namespace FFTBench.Benchmark
             {
                 data[i] /= data.Length;
             }
+        }
+
+        public static Complex[] Multiply(Complex[] data, double factor)
+        {
+            Complex[] result = new Complex[data.Length];
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                result[i] = data[i] * factor;
+            }
+
+            return result;
+        }
+
+        public static double CalculateError(Complex[] result, Complex[] target)
+        {
+            int length = Math.Min(result.Length, target.Length);
+
+            double error = 0;
+            for (int i = 0; i < length; i++)
+            {
+                error += Complex.Subtract(result[i], target[i]).Magnitude;
+            }
+
+            return error;
         }
     }
 }

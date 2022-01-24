@@ -38,6 +38,7 @@ namespace FFTBench.Benchmark
             int size = Util.Log2(input.Length);
 
             FastFourierTransform.FFT(true, size, data);
+            System.Diagnostics.Debug.WriteLine(this + " Error = " + Helper.CalculateError(Helper.Multiply(ToComplex(data), data.Length), SignalGenerator.TestArrayFFTresult()));
             var spectrum = ComputeSpectrum(data);
             FastFourierTransform.FFT(false, size, data);
             backwardResult = ToDouble(data);
@@ -73,6 +74,18 @@ namespace FFTBench.Benchmark
                     X = (float)data[i],
                     Y = 0f
                 };
+            }
+
+            return result;
+        }
+
+        protected System.Numerics.Complex[] ToComplex(Complex[] data)
+        {
+            var result = new System.Numerics.Complex[data.Length];
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                result[i] = new System.Numerics.Complex(data[i].X, data[i].Y);
             }
 
             return result;

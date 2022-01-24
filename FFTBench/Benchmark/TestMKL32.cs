@@ -1,5 +1,6 @@
 ﻿using oneMKL.FFT.NET;
 using System;
+using System.Numerics;
 
 namespace FFTBench.Benchmark
 {
@@ -98,7 +99,7 @@ namespace FFTBench.Benchmark
             }
 
             var spectrum = ComputeSpectrum(data2);
-
+            System.Diagnostics.Debug.WriteLine(this + " Error = " + Helper.CalculateError(ComplexToComplex(data2), SignalGenerator.TestArrayFFTresult()));
             DFTI.DftiComputeBackward(desc, data2, data1);
             if (res != DFTI.NO_ERROR)
             {
@@ -157,6 +158,18 @@ namespace FFTBench.Benchmark
             }
 
             return target;
+        }
+
+        public static Complex[] ComplexToComplex(ComplexF[] data)
+        {
+            Complex[] res = new Complex[data.Length];
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                res[i] = new Complex(data[i].Real, data[i].Imaginary);
+            }
+
+            return res;
         }
     }
 }

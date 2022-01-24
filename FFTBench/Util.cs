@@ -35,6 +35,8 @@ namespace FFTBench
             tests.Add(new TestMKLRealInplace() { Enabled = true });
             tests.Add(new TestMKLReal32() { Enabled = true });
             tests.Add(new TestMKLReal32() { Enabled = true, StretchInput = true });
+            tests.Add(new TestMKLReal32() { Enabled = true, StretchInput = true, UsePackedFormat = true });
+            tests.Add(new TestMKLReal32() { Enabled = true, StretchInput = true, UsePackedFormat = true, UseComplexStorage = true });
             tests.Add(new TestMKL() { Enabled = true });
             tests.Add(new TestMKL() { Enabled = true, StretchInput = true });
             tests.Add(new TestMKL32() { Enabled = true });

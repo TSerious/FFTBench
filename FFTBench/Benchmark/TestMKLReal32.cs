@@ -14,6 +14,10 @@ namespace FFTBench.Benchmark
 
         public bool StretchInput { get; set; }
 
+        public bool UsePackedFormat { get; set; }
+
+        public bool UseComplexStorage { get; set; }
+
         public void Initialize(double[] data)
         {
             if (StretchInput)
@@ -38,7 +42,7 @@ namespace FFTBench.Benchmark
                 throw new Exception(this + ": Can't initialize");
             }
 
-            res = DFTI.DftiSetValue(descriptor, DFTI.CONFIG_PARAM.PACKED_FORMAT, DFTI.CONFIG_VALUE.PACK_FORMAT);
+            res = DFTI.DftiSetValue(descriptor, DFTI.CONFIG_PARAM.PACKED_FORMAT, UsePackedFormat ? DFTI.CONFIG_VALUE.PACK_FORMAT : DFTI.CONFIG_VALUE.CCS_FORMAT);
             if (res != DFTI.NO_ERROR)
             {
                 throw new Exception(this + ": Can't initialize");
@@ -51,7 +55,7 @@ namespace FFTBench.Benchmark
             }
 
             input = Helper.ConvertToFloat(data);
-            output = new float[data.Length];
+            output = new float[GetOutPutLength(data.Length, this.UsePackedFormat, this.UseComplexStorage)];
         }
 
         public void FFT(bool forward)
@@ -87,10 +91,27 @@ namespace FFTBench.Benchmark
                 throw new Exception(this + ": Can't initialize");
             }
 
-            res = DFTI.DftiSetValue(desc, DFTI.CONFIG_PARAM.PACKED_FORMAT, DFTI.CONFIG_VALUE.PACK_FORMAT);
+            res = DFTI.DftiSetValue(desc, DFTI.CONFIG_PARAM.CONJUGATE_EVEN_STORAGE, UseComplexStorage ? DFTI.CONFIG_VALUE.COMPLEX_COMPLEX : DFTI.CONFIG_VALUE.COMPLEX_REAL);
             if (res != DFTI.NO_ERROR)
             {
                 throw new Exception(this + ": Can't initialize");
+            }
+
+            if (UseComplexStorage)
+            {
+                res = DFTI.DftiSetValue(desc, DFTI.CONFIG_PARAM.PACKED_FORMAT, DFTI.CONFIG_VALUE.CCE_FORMAT);
+                if (res != DFTI.NO_ERROR)
+                {
+                    throw new Exception(this + ": Can't initialize");
+                }
+            }
+            else
+            {
+                res = DFTI.DftiSetValue(desc, DFTI.CONFIG_PARAM.PACKED_FORMAT, UsePackedFormat ? DFTI.CONFIG_VALUE.PACK_FORMAT : DFTI.CONFIG_VALUE.CCS_FORMAT);
+                if (res != DFTI.NO_ERROR)
+                {
+                    throw new Exception(this + ": Can't initialize");
+                }
             }
 
             res = DFTI.DftiCommitDescriptor(desc);
@@ -100,7 +121,7 @@ namespace FFTBench.Benchmark
             }
 
             float[] data1 = Helper.ConvertToFloat(input);
-            float[] data2 = new float[input.Length];
+            float[] data2 = new float[GetOutPutLength(input.Length, this.UsePackedFormat, this.UseComplexStorage)];
 
             res = DFTI.DftiComputeForward(desc, data1, data2);
             if (res != DFTI.NO_ERROR)
@@ -108,7 +129,17 @@ namespace FFTBench.Benchmark
                 throw new Exception(this + ": Can't compute fft.");
             }
 
-            var result = Utils.PackedRealToComplex(data2);
+            Complex[] result;
+            if (UsePackedFormat && !UseComplexStorage)
+            {
+                result = Utils.PackedRealToComplex(data2);
+            }
+            else
+            {
+                result = ToComplex(data2);
+            }
+
+            System.Diagnostics.Debug.WriteLine(this + " Error = " + Helper.CalculateError(result, SignalGenerator.TestArrayFFTresult()));
             var spectrum = Helper.ComputeSpectrum(result);
 
             res = DFTI.DftiComputeBackward(desc, data2, data1);
@@ -134,6 +165,16 @@ namespace FFTBench.Benchmark
                 name += "(stretched)";
             }
 
+            if (UsePackedFormat)
+            {
+                name += "(packed)";
+            }
+
+            if (UseComplexStorage)
+            {
+                name += "(complex)";
+            }
+
             return name;
         }
 
@@ -148,6 +189,35 @@ namespace FFTBench.Benchmark
             }
 
             return complex;
+        }
+
+        public static Complex[] ToComplex(float[] data)
+        {
+            Complex[] complex = new Complex[data.Length >> 1];
+
+            for (int i = 0; i < complex.Length; i++)
+            {
+                complex[i] = new Complex(
+                    data[(i << 1)],
+                    data[(i << 1) + 1]);
+            }
+
+            return complex;
+        }
+
+        public static int GetOutPutLength(int inputLength, bool packed, bool complexStorage)
+        {
+            if (complexStorage)
+            {
+                return inputLength + 2;
+            }
+
+            if (packed)
+            {
+                return inputLength;
+            }
+
+            return inputLength + 2;
         }
     }
 }

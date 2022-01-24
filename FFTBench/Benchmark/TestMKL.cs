@@ -82,7 +82,8 @@ namespace FFTBench.Benchmark
             {
                 throw new Exception(this + ": Can't run fft");
             }
-            
+
+            System.Diagnostics.Debug.WriteLine(this + " Error = " + Helper.CalculateError(data2, SignalGenerator.TestArrayFFTresult()));
             var spectrum = Helper.ComputeSpectrum(data2);
 
             DFTI.DftiComputeBackward(desc, data2, data1);

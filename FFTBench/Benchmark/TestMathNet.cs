@@ -33,7 +33,8 @@ namespace FFTBench.Benchmark
             }
 
             Helper.ToComplex(input, out Complex[] data);
-            Fourier.Forward(data, FourierOptions.Default);
+            Fourier.Forward(data, FourierOptions.AsymmetricScaling);
+            Debug.WriteLine(this + " Error = " + Helper.CalculateError(data, SignalGenerator.TestArrayFFTresult()));
             var spectrum = Helper.ComputeSpectrum(data);
             Fourier.Inverse(data, FourierOptions.Default);
             backwardResult = Helper.ToReal(data);

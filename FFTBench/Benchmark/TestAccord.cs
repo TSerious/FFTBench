@@ -35,6 +35,7 @@ namespace FFTBench.Benchmark
 
             Helper.ToComplex(input, out data);
             FourierTransform2.FFT(data, FourierTransform.Direction.Forward);
+            System.Diagnostics.Debug.WriteLine(this + " Error = " + Helper.CalculateError(data, SignalGenerator.TestArrayFFTresult()));
             var spectrum = Helper.ComputeSpectrum(data);
             FourierTransform2.FFT(data, FourierTransform.Direction.Backward);
             backwardResult = Helper.ToReal(data);

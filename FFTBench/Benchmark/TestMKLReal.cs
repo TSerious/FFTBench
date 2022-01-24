@@ -110,6 +110,7 @@ namespace FFTBench.Benchmark
             }
 
             var result = Utils.PackedRealToComplex(data2);
+            System.Diagnostics.Debug.WriteLine(this + " Error = " + Helper.CalculateError(result, SignalGenerator.TestArrayFFTresult()));
             var spectrum = Helper.ComputeSpectrum(result);
 
             res = DFTI.DftiComputeBackward(desc, data2, data1);

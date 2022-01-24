@@ -36,6 +36,7 @@ namespace FFTBench.Benchmark
             var fft = new FFT();
             fft.Initialize((uint)input.Length);
             var result = fft.Execute(input);
+            System.Diagnostics.Debug.WriteLine(this + " Error = " + Helper.CalculateError(Helper.Multiply(result, input.Length), SignalGenerator.TestArrayFFTresult()));
             var spectrum = DSP.ConvertComplex.ToMagnitude(result);
             backwardResult = new double[input.Length];
 

@@ -48,6 +48,7 @@ namespace FFTBench.Benchmark
                 Fill(input, ref data1);
                 plan1.Execute();
                 var spectrum = ComputeSpectrum(data2);
+                System.Diagnostics.Debug.WriteLine(this + " Error = " + Helper.CalculateError(ComplexToComplex(data2), SignalGenerator.TestArrayFFTresult()));
                 plan2.Execute();
                 backwardResult = ToReal(data1);
                 Helper.Scale(ref backwardResult, scale);
@@ -103,6 +104,18 @@ namespace FFTBench.Benchmark
             }
 
             return target;
+        }
+
+        public static Complex[] ComplexToComplex(FftwArrayComplex data)
+        {
+            Complex[] res = new Complex[data.Length];
+
+            for (int i = 0; i<data.Length; i++)
+            {
+                res[i] = data[i];
+            }
+
+            return res;
         }
     }
 }

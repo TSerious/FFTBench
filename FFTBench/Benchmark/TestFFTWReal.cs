@@ -50,6 +50,7 @@ namespace FFTBench.Benchmark
             {
                 plan1.Execute();
                 var spectrum = TestFFTW.ComputeSpectrum(data2);
+                System.Diagnostics.Debug.WriteLine(this + " Error = " + Helper.CalculateError(TestFFTW.ComplexToComplex(data2), SignalGenerator.TestArrayFFTresult()));
                 plan2.Execute();
                 backwardResult = TestFFTW.ToReal(data3);
                 Helper.Scale(ref backwardResult, scale);
