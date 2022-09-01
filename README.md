@@ -64,9 +64,12 @@ Table 1: Results on OS=Microsoft Windows NT 6.2.9200.0, Processor=11th Gen Intel
 |MKL||27|0,00|5,53|47|0,00|9,60|109|0,00|21,88|590|0,01|118,07|1073|0,02|214,73|1736|0,03|347,22|3278|0,07|655,74|
 |MKL32||28|0,00|5,80|33|0,00|6,61|65|0,00|13,01|449|0,01|89,95|702|0,01|140,49|1073|0,02|214,61|1898|0,04|379,73|
 
+![Capture2](https://user-images.githubusercontent.com/5380109/187877284-676a6c36-4f5d-4d9a-87fb-b1c2e8b3b26f.PNG)
+Figure 2: Results for input data with a size of 200. "stretched" means that the input data is extended to fit into an array whose size is a power of 2.
+
 ## Conclusion
 
-The FFT libraries with the best performance are FFTS, FFTW and MKL (Intel®). Depending on what data you want to process chosing the right library might at least double the performance.
+The FFT libraries with the best performance are FFTS, FFTW and MKL (Intel®). Depending on what data you want to process chosing the right library might at least double the performance. Preparing your data before performing the FFT can also improve your performance, as input size which are a power of 2 are way faster.
 
 ## License
 This project is licensed under the MIT license but certain parts of it (for example FFTW) are published under a different license!
