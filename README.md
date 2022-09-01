@@ -21,6 +21,12 @@ The following FFT implementations can be compared:
 Open the solution, compile and start the FFTBench project.
 
 ## Explanation
+
+The name of each FFT implementation might be extended with one or more of the following:
+- "real" means that a FFT of only real numbers was performed. If this is not part of a name (mostly) a FFT of complex numbers is performed.
+- "32" means that only single precision number were used for the FFT. If this is not part of a name (mostly) double precision number were used.
+- "inplace" means that the input overwrites the output. More about this can be found here: https://www.intel.com/content/www/us/en/develop/documentation/onemkl-developer-reference-c/top/fourier-transform-functions/fft-functions/configuration-settings/dfti-placement.html
+
 For more details please see the well written artice of Christian Woltering: https://www.codeproject.com/articles/1095473/comparison-of-fft-implementations-for-net
 
 ## Disclaimer
@@ -31,11 +37,9 @@ Only runs on Windows.
 
 Here are some results.
 ![Capture](https://user-images.githubusercontent.com/5380109/187858219-bebac7d5-dd43-4918-a09d-f07f0de7f236.PNG)
+Figure 1: Results for different lengths of input arrays ("Size") and 1000 FFT's performed on each array.
 
-Explanation:
-- "real" means that a FFT of only real numbers was performed. If this is not part of a name (mostly) a FFT of complex numbers is performed.
-- "32" means that only single precision number were used for the FFT. If this is not part of a name (mostly) double precision number were used.
-- "inplace" means that the input overwrites the output. More about this can be found here: https://www.intel.com/content/www/us/en/develop/documentation/onemkl-developer-reference-c/top/fourier-transform-functions/fft-functions/configuration-settings/dfti-placement.html
+
 
 
 
