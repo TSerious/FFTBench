@@ -135,9 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Exocortex.DSP\Exocortex.DSP.csproj" />
-    <ProjectReference Include="..\FFTSSharp\FFTSSharp.csproj" />
     <ProjectReference Include="..\FFTSSharp\FFTSSharp\FFTSSharp.csproj" />
-    <ProjectReference Include="..\MKL\MKL.csproj" />
     <ProjectReference Include="..\oneMKL.FFT.NET\oneMKL.FFT.NET\oneMKL.FFT.NET.csproj" />
   </ItemGroup>
   <ItemGroup>

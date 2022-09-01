@@ -29,6 +29,7 @@ namespace FFTBench.Benchmark
                 result.Maximum =
                 result.Total = -1;
                 result.Average = -1;
+                result.AverageTicks = -1;
 
                 return result;
             }
@@ -55,8 +56,10 @@ namespace FFTBench.Benchmark
             result.Minimum = (long)TimeSpan.FromTicks(result.Minimum).TotalMilliseconds;
             result.Maximum = (long)TimeSpan.FromTicks(result.Maximum).TotalMilliseconds;
 
+            result.AverageTicks = (double)result.Total / (repeat * innerIterations);
             result.Total = (long)TimeSpan.FromTicks(result.Total).TotalMilliseconds;
             result.Average = (double)result.Total / (repeat * innerIterations);
+            
 
             return result;
         }

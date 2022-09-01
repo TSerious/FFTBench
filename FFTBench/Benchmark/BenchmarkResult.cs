@@ -1,37 +1,46 @@
 ﻿
 namespace FFTBench.Benchmark
 {
-    public class BenchmarkResult
+    public struct BenchmarkResult
     {
         /// <summary>
         /// The minimum runtime in milliseconds.
         /// </summary>
-        public long Minimum;
+        public long Minimum { get; set; }
 
         /// <summary>
         /// The maximum runtime in milliseconds.
         /// </summary>
-        public long Maximum;
+        public long Maximum { get; set; }
 
         /// <summary>
         /// The average runtime in milliseconds.
         /// </summary>
-        public double Average;
+        public double Average { get; set; }
+
+        /// <summary>
+        /// The average runtime in ticks.
+        /// </summary>
+        public double AverageTicks { get; set; }
 
         /// <summary>
         /// The total runtime (with repeats) in milliseconds.
         /// </summary>
-        public long Total;
+        public long Total { get; set; }
 
         /// <summary>
         /// The FFT size.
         /// </summary>
-        public int Size;
+        public int Size { get; set; }
 
         public BenchmarkResult(int size)
         {
             this.Size = size;
-            this.Minimum = long.MaxValue;
+            this.Minimum =
+            this.Maximum = long.MaxValue;
+            this.Average =
+            this.AverageTicks = -1;
+            this.Total = 0;
         }
     }
 }

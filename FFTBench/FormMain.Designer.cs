@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.btnExplore = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.btnChoose = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.comboSize1 = new System.Windows.Forms.ToolStripComboBox();
@@ -39,8 +41,6 @@
             this.comboRepeat = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnRun = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnExplore = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnCopy = new System.Windows.Forms.ToolStripButton();
             this.btnSave = new System.Windows.Forms.ToolStripButton();
@@ -75,6 +75,21 @@
             this.toolStrip1.Size = new System.Drawing.Size(792, 25);
             this.toolStrip1.TabIndex = 4;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // btnExplore
+            // 
+            this.btnExplore.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnExplore.Image = global::FFTBench.Properties.Resources.graph;
+            this.btnExplore.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnExplore.Name = "btnExplore";
+            this.btnExplore.Size = new System.Drawing.Size(23, 22);
+            this.btnExplore.Text = "Open FFT Explorer";
+            this.btnExplore.Click += new System.EventHandler(this.btnExplore_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
             // 
             // btnChoose
             // 
@@ -121,7 +136,7 @@
             // toolStripLabel2
             // 
             this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(17, 22);
+            this.toolStripLabel2.Size = new System.Drawing.Size(18, 22);
             this.toolStripLabel2.Text = "to";
             // 
             // comboSize2
@@ -179,21 +194,6 @@
             this.btnRun.Text = "Run Benchmark";
             this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
             // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
-            // 
-            // btnExplore
-            // 
-            this.btnExplore.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnExplore.Image = global::FFTBench.Properties.Resources.graph;
-            this.btnExplore.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnExplore.Name = "btnExplore";
-            this.btnExplore.Size = new System.Drawing.Size(23, 22);
-            this.btnExplore.Text = "Open FFT Explorer";
-            this.btnExplore.Click += new System.EventHandler(this.btnExplore_Click);
-            // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
@@ -206,7 +206,7 @@
             this.btnCopy.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnCopy.Name = "btnCopy";
             this.btnCopy.Size = new System.Drawing.Size(23, 22);
-            this.btnCopy.Text = "Copy results to clipboard";
+            this.btnCopy.Text = "Copy results as HTML to clipboard";
             this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
             // 
             // btnSave

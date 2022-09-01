@@ -47,7 +47,7 @@ namespace FFTBench.Benchmark
 
         public void FFT(bool forward)
         {
-            if( DFTI.DftiComputeForward(descriptor, data) != DFTI.NO_ERROR)
+            if (DFTI.DftiComputeForward(descriptor, data) != DFTI.NO_ERROR)
             {
                 throw new Exception(this + ": Can't calculate fft.");
             }

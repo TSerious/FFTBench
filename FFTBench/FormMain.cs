@@ -6,6 +6,7 @@ using OxyPlot.WindowsForms;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -112,9 +113,12 @@ namespace FFTBench
                 var results = await RunBenchmark(testLengths, repeat, tests, progress, cts.Token);
 
                 this.plot.Model = CreatePlotModel(results);
+                this.plot.Model.PlotView.ActualController.BindMouseDown(OxyMouseButton.Left, PlotCommands.ZoomRectangle);
+                this.plot.Model.PlotView.ActualController.BindKeyDown(OxyKey.R, PlotCommands.Reset);
 
                 //report = CreateReport(results);
-                report = CreateReportHtml(results);
+                this.report = CreateReportHtml(results);
+                System.IO.File.WriteAllText($"{System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)}\\report.html",this.report);
             }
             catch (Exception ex)
             {
@@ -203,11 +207,15 @@ namespace FFTBench
             var categoryAxis = new CategoryAxis 
             {
                 Position = AxisPosition.Bottom,
-                Key = "Category"
+                Key = "Category",
+                Title = "Size",
             };
+
             var valueAxis = new LinearAxis
             {
                 Key = "Value",
+                Unit = "ms",
+                Title = "Total run time",
                 Position = AxisPosition.Left,
                 MinimumPadding = 0,
                 MaximumPadding = 0.06,
@@ -222,6 +230,7 @@ namespace FFTBench
                 MinorGridlineStyle = LineStyle.Solid,
                 MajorGridlineColor = OxyColors.Gray,
                 MinorGridlineColor = OxyColors.LightGray,
+                IsZoomEnabled = true,
             };
 
             model.Axes.Add(categoryAxis);
@@ -377,20 +386,54 @@ namespace FFTBench
                     r.Add(size, result.Value);
                 }
             }
+
+            s.AppendLine("<style>\r\n" +
+                "td {\r\n\ttext-align: center;\r\n}\r\n\r\n" +
+                ".textLeft {\r\n\ttext-align: left;\r\n}\r\n\r\n" +
+                ".rightBorder {\r\n  border-right: 1px solid black;\r\n  border-collapse: collapse;\r\n}\r\n\r\n" +
+                "tr:nth-child(even) {\r\n  background-color: #D6EEEE;\r\n}\r\n" +
+                "</style>");
+
+            s.AppendLine("<table>");
             
+            s.AppendLine("\t\t<tr>");
+            s.Append("\t\t\t<th class=\"rightBorder\"></th>");
+            foreach (var size in sorted.First().Value.Keys)
+            {
+                s.Append("<th colspan=\"3\" class=\"rightBorder\">Size</th>");
+            }
+            s.AppendLine("\n\t\t</tr>");
+
+            s.Append("\t\t\t<th class=\"rightBorder\"></th>");
+            foreach (var size in sorted.First().Value.Keys)
+            {
+                s.Append("<th colspan=\"3\" class=\"rightBorder\">" + size.ToString() + "</th>");
+            }
+            s.AppendLine("\n\t\t</tr>");
+
+            s.AppendLine("\t\t<tr>");
+            s.Append("\t\t\t<th class=\"rightBorder textLeft\">Name</th>");
+            foreach (var size in sorted.First().Value.Keys)
+            {
+                s.Append("<th>Total [ms]</th><th>Average [ms]</th><th class=\"rightBorder\">Average [ticks]</th>");
+            }
+            s.AppendLine("\n\t\t</tr>");
+
             foreach (var item in sorted)
             {
-                s.AppendFormat("\t\t<tr>");
-                s.AppendFormat("\t\t\t<td>" + item.Key + "</td>");
+                s.AppendLine("\t\t<tr>");
+                s.AppendFormat("\t\t\t<td class=\"rightBorder textLeft\">" + item.Key + "</td>");
 
                 foreach (var result in item.Value)
                 {
-                    s.AppendFormat("\t\t\t<td>" + result.Value.Total + "</td>");
-                    s.AppendFormat("\t\t\t<td>" + result.Value.Average.ToString("0.00") + "</td>");
+                    s.AppendFormat("<td>" + result.Value.Total + "</td>");
+                    s.AppendFormat("<td>" + result.Value.Average.ToString("0.00") + "</td>");
+                    s.AppendFormat("<td class=\"rightBorder\">" + result.Value.AverageTicks.ToString("0.00") + "</td>");
                 }
 
-                s.AppendFormat("\t\t</tr>");
+                s.AppendLine("\n\t\t</tr>");
             }
+            s.AppendLine("\n</table>");
 
             return s.ToString();
         }
