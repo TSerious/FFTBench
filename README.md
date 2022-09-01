@@ -65,7 +65,7 @@ Table 1: Results on OS=Microsoft Windows NT 6.2.9200.0, Processor=11th Gen Intel
 |MKL32||28|0,00|5,80|33|0,00|6,61|65|0,00|13,01|449|0,01|89,95|702|0,01|140,49|1073|0,02|214,61|1898|0,04|379,73|
 
 ![Capture2](https://user-images.githubusercontent.com/5380109/187877284-676a6c36-4f5d-4d9a-87fb-b1c2e8b3b26f.PNG)
-Figure 2: Results for input data with a size of 200. "stretched" means that the input data is extended to fit into an array whose size is a power of 2.
+Figure 2: Results for input data with a size of 200 and 1000 repeats for each FFT. "stretched" means that the input data is extended to fit into an array whose size is a power of 2.
 
 ## Conclusion
 
