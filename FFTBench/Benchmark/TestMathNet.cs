@@ -1,13 +1,11 @@
 ﻿using MathNet.Numerics;
 using MathNet.Numerics.IntegralTransforms;
-using MathNet.Numerics.LinearAlgebra;
-using System;
 using System.Diagnostics;
 using System.Numerics;
 
 namespace FFTBench.Benchmark
 {
-    public class TestMathNet : BaseTest
+    public class TestMathNetBase : BaseTest
     {
         public bool StretchInput { get; set; }
 
@@ -42,10 +40,49 @@ namespace FFTBench.Benchmark
 
             return spectrum;
         }
+    }
+
+    public class TestMathNet : TestMathNetBase
+    {
+        public override void Initialize(double[] data)
+        {
+            //Control.UseSingleThread();
+            Control.UseMultiThreading();
+            Control.UseManaged();
+
+            // Gives identical results
+            //Control.UseManagedReference();
+
+            base.Initialize(data);
+        }
 
         public override string ToString()
         {
             string name = "Math.NET";
+
+            if (StretchInput)
+            {
+                name += "(stretched)";
+            }
+
+            return name;
+        }
+    }
+
+    public class TestMathNetPlusMkl : TestMathNetBase
+    {
+        public override void Initialize(double[] data)
+        {
+            //Control.UseSingleThread();
+            Control.UseMultiThreading();
+            Control.UseNativeMKL();
+
+            base.Initialize(data);
+        }
+
+        public override string ToString()
+        {
+            string name = "Math.NET+MKL";
 
             if (StretchInput)
             {
