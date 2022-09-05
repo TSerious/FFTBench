@@ -53,7 +53,7 @@ namespace FFTBench
                 comboSignals.Items.Add(item.Key);
             }
 
-            for (int i = 7; i < 11; i++)
+            for (int i = 7; i < 16; i++)
             {
                 comboSize.Items.Add(Util.Pow(2, i));
             }

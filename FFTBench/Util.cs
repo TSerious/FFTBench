@@ -1,7 +1,6 @@
 ﻿using FFTBench.Benchmark;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace FFTBench
 {
@@ -9,40 +8,49 @@ namespace FFTBench
     {
         public static List<ITest> LoadTests()
         {
-            var tests = new List<ITest>();
-
-            tests.Add(new TestAccord() { Enabled = false });
-            tests.Add(new TestAccord() { Enabled = false, StretchInput = true });
-            tests.Add(new TestAForge() { Enabled = false });
-            tests.Add(new TestMathNet() { Enabled = true });
-            tests.Add(new TestMathNet() { Enabled = true, StretchInput = true });
-            tests.Add(new TestMathNetPlusMkl() { Enabled = true });
-            tests.Add(new TestMathNetPlusMkl() { Enabled = true, StretchInput = true });
-            tests.Add(new TestNAudio() { Enabled = false });
-            tests.Add(new TestDSPLib() { Enabled = false });
-            tests.Add(new TestLomont() { Enabled = false });
-            tests.Add(new TestLomontReal() { Enabled = false });
-            tests.Add(new TestExocortex() { Enabled = false });
-            tests.Add(new TestExocortexReal32() { Enabled = false });
-            tests.Add(new TestFFTS() { Enabled = false });
-            tests.Add(new TestFFTS() { Enabled = false, StretchInput = true });
-            tests.Add(new TestFFTSReal() { Enabled = false });
-            tests.Add(new TestFFTSReal() { Enabled = false, StretchInput = true });
-            tests.Add(new TestFFTW() { Enabled = false });
-            tests.Add(new TestFFTW() { Enabled = false, StretchInput = true });
-            tests.Add(new TestFFTWReal() { Enabled = false });
-            tests.Add(new TestFFTWReal() { Enabled = false, StretchInput = true });
-            tests.Add(new TestMKLReal() { Enabled = false });
-            tests.Add(new TestMKLReal() { Enabled = false, StretchInput = true });
-            tests.Add(new TestMKLRealInplace() { Enabled = false });
-            tests.Add(new TestMKLReal32() { Enabled = false });
-            tests.Add(new TestMKLReal32() { Enabled = false, StretchInput = true });
-            tests.Add(new TestMKLReal32() { Enabled = false, StretchInput = true, UsePackedFormat = true });
-            tests.Add(new TestMKLReal32() { Enabled = false, StretchInput = true, UsePackedFormat = true, UseComplexStorage = true });
-            tests.Add(new TestMKL() { Enabled = false });
-            tests.Add(new TestMKL() { Enabled = false, StretchInput = true });
-            tests.Add(new TestMKL32() { Enabled = false });
-            tests.Add(new TestMKL32() { Enabled = false, StretchInput = true });
+            var tests = new List<ITest>
+            {
+                new TestAccord() { Enabled = true },
+                new TestAccord() { Enabled = true, StretchInput = true },
+                new TestAForge() { Enabled = true },
+                new TestMathNet() { Enabled = true },
+                new TestMathNet() { Enabled = true, SingleThreaded = false },
+                new TestMathNet() { Enabled = true, StretchInput = true },
+                new TestMathNetReal32() { Enabled = true },
+                new TestMathNetReal32() { Enabled = true, SingleThreaded = false },
+                new TestMathNetReal32() { Enabled = true, StretchInput = true },
+                new TestMathNetPlusMkl() { Enabled = true },
+                new TestMathNetPlusMkl() { Enabled = true, SingleThreaded = false },
+                new TestMathNetPlusMkl() { Enabled = true, StretchInput = true },
+                new TestMathNetPlusMklReal32() { Enabled = true },
+                new TestMathNetPlusMklReal32() { Enabled = true, SingleThreaded = false },
+                new TestMathNetPlusMklReal32() { Enabled = true, StretchInput = true },
+                new TestNAudio() { Enabled = true },
+                new TestDSPLib() { Enabled = true },
+                new TestLomont() { Enabled = true },
+                new TestLomontReal() { Enabled = true },
+                new TestExocortex() { Enabled = true },
+                new TestExocortexReal32() { Enabled = true },
+                new TestFFTS() { Enabled = true },
+                new TestFFTS() { Enabled = true, StretchInput = true },
+                new TestFFTSReal() { Enabled = true },
+                new TestFFTSReal() { Enabled = true, StretchInput = true },
+                new TestFFTW() { Enabled = true },
+                new TestFFTW() { Enabled = true, StretchInput = true },
+                new TestFFTWReal() { Enabled = true },
+                new TestFFTWReal() { Enabled = true, StretchInput = true },
+                new TestMKLReal() { Enabled = true },
+                new TestMKLReal() { Enabled = true, StretchInput = true },
+                new TestMKLRealInplace() { Enabled = true },
+                new TestMKLReal32() { Enabled = true },
+                new TestMKLReal32() { Enabled = true, StretchInput = true },
+                new TestMKLReal32() { Enabled = true, StretchInput = true, UsePackedFormat = true },
+                new TestMKLReal32() { Enabled = true, StretchInput = true, UsePackedFormat = true, UseComplexStorage = true },
+                new TestMKL() { Enabled = true },
+                new TestMKL() { Enabled = true, StretchInput = true },
+                new TestMKL32() { Enabled = true },
+                new TestMKL32() { Enabled = true, StretchInput = true }
+            };
             //tests.Add(new TestLomontReal32() { Enabled = true });
             //tests.Add(new TestKissFFT() { Enabled = true });
 

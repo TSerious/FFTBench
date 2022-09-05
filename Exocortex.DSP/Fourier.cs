@@ -382,8 +382,8 @@ namespace Exocortex.DSP
 
         private static void SyncLookupTableLength(int length)
         {
-            Debug.Assert(length < 1024 * 10);
-            Debug.Assert(length >= 0);
+            //Debug.Assert(length < 1024 * 10);
+            //Debug.Assert(length >= 0);
             if (length > _lookupTabletLength)
             {
                 int level = (int)Math.Ceiling(Math.Log(length, 2));

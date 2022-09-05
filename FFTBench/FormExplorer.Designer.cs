@@ -48,6 +48,7 @@
             // 
             // toolStrip1
             // 
+            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
             this.comboFFTs,
@@ -58,45 +59,45 @@
             this.btnRun});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(792, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(792, 28);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(29, 22);
+            this.toolStripLabel1.Size = new System.Drawing.Size(34, 25);
             this.toolStripLabel1.Text = "FFT:";
             // 
             // comboFFTs
             // 
             this.comboFFTs.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboFFTs.Name = "comboFFTs";
-            this.comboFFTs.Size = new System.Drawing.Size(121, 25);
+            this.comboFFTs.Size = new System.Drawing.Size(121, 28);
             // 
             // toolStripLabel2
             // 
             this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(42, 22);
+            this.toolStripLabel2.Size = new System.Drawing.Size(57, 25);
             this.toolStripLabel2.Text = " Signal:";
             // 
             // comboSignals
             // 
             this.comboSignals.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboSignals.Name = "comboSignals";
-            this.comboSignals.Size = new System.Drawing.Size(121, 25);
+            this.comboSignals.Size = new System.Drawing.Size(121, 28);
             // 
             // toolStripLabel3
             // 
             this.toolStripLabel3.Name = "toolStripLabel3";
-            this.toolStripLabel3.Size = new System.Drawing.Size(33, 22);
+            this.toolStripLabel3.Size = new System.Drawing.Size(43, 25);
             this.toolStripLabel3.Text = " Size:";
             // 
             // comboSize
             // 
             this.comboSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboSize.Name = "comboSize";
-            this.comboSize.Size = new System.Drawing.Size(121, 25);
+            this.comboSize.Size = new System.Drawing.Size(121, 28);
             // 
             // btnRun
             // 
@@ -104,22 +105,22 @@
             this.btnRun.Image = global::FFTBench.Properties.Resources.play;
             this.btnRun.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRun.Name = "btnRun";
-            this.btnRun.Size = new System.Drawing.Size(23, 22);
+            this.btnRun.Size = new System.Drawing.Size(29, 25);
             this.btnRun.Text = "Process Signal";
             this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 25);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 28);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(792, 448);
-            this.splitContainer1.SplitterDistance = 134;
+            this.splitContainer1.Size = new System.Drawing.Size(792, 445);
+            this.splitContainer1.SplitterDistance = 133;
             this.splitContainer1.TabIndex = 1;
             // 
             // splitContainer2
@@ -128,13 +129,13 @@
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
             this.splitContainer2.Name = "splitContainer2";
             this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            this.splitContainer2.Size = new System.Drawing.Size(792, 310);
-            this.splitContainer2.SplitterDistance = 154;
+            this.splitContainer2.Size = new System.Drawing.Size(792, 308);
+            this.splitContainer2.SplitterDistance = 153;
             this.splitContainer2.TabIndex = 0;
             // 
             // FormExplorer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(792, 473);
             this.Controls.Add(this.splitContainer1);

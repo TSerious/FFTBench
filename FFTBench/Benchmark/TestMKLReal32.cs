@@ -209,7 +209,9 @@ namespace FFTBench.Benchmark
         {
             if (complexStorage)
             {
-                return inputLength + 2;
+                return inputLength%2 == 0
+                    ? inputLength + 2
+                    : inputLength + 1;
             }
 
             if (packed)
