@@ -49,7 +49,9 @@ namespace FFTBench
                 new TestMKL() { Enabled = true },
                 new TestMKL() { Enabled = true, StretchInput = true },
                 new TestMKL32() { Enabled = true },
-                new TestMKL32() { Enabled = true, StretchInput = true }
+                new TestMKL32() { Enabled = true, StretchInput = true },
+                new TestMKLNET() { Enabled = true, StretchInput = false },
+                new TestMKLNET() { Enabled = true, StretchInput = true },
             };
             //tests.Add(new TestLomontReal32() { Enabled = true });
             //tests.Add(new TestKissFFT() { Enabled = true });

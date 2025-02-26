@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <ProjectGuid>{1904A41B-D1B8-40E5-ADBB-728DDCF7C816}</ProjectGuid>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <Deterministic>false</Deterministic>
     <DocumentationFile></DocumentationFile>
     <OutputPath></OutputPath>

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ProjectGuid>{3F9950C6-C039-4322-9590-EDED88AF1154}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <AssemblyTitle>FFTBench</AssemblyTitle>
     <Product>FFTBench</Product>
     <Copyright>Copyright ©  2016</Copyright>
@@ -22,6 +22,8 @@
     <PackageReference Include="MathNet.Numerics.MKL.Win-x64" Version="2.5.0" />
     <PackageReference Include="Microsoft.NETCore.Platforms" Version="6.0.1" />
     <PackageReference Include="Microsoft.Win32.Primitives" Version="4.3.0" />
+    <PackageReference Include="MKL.NET" Version="1.6.0" />
+    <PackageReference Include="MKL.NET.win-x64" Version="2022.0.0.115" />
     <PackageReference Include="NAudio" Version="1.10.0" />
     <PackageReference Include="NETStandard.Library" Version="2.0.3" />
     <PackageReference Include="OxyPlot.Core" Version="2.1.0" />
